@@ -81,6 +81,10 @@
         background: #5b5bd6 !important;
         color: #fff !important;
         font-weight: 600 !important;
+        border-radius: 8px !important;   // rounded pill
+        margin: 0 10px !important;       // space from left and right edges
+        width: calc(100% - 20px) !important;  // adjust width to account for margin
+        padding: 11px 12px !important; 
 
         svg,
         i,
@@ -105,8 +109,7 @@
 
 // ── TOP HEADER ────────────────────────────────────────────────────────────
 .site-header-desktop.site-header-top {
-  margin-left: 200px;
-  position: sticky;
+    position: sticky;
   top: 0;
   z-index: 999;
   background: #fff;
@@ -114,7 +117,7 @@
   box-shadow: none;
 
   .nav-container {
-    height: 56px;
+    height: 70px;
     padding: 0 24px;
   }
 
