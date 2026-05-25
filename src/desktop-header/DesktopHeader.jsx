@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
+import { useLocation } from 'react-router-dom';
 
 // Local Components
 import DesktopUserMenuToggleSlot from '../plugin-slots/DesktopUserMenuToggleSlot';
@@ -18,6 +19,19 @@ import { desktopUserMenuDataShape } from './DesktopHeaderUserMenu';
 // i18n
 import messages from '../Header.messages';
 
+// Map URL paths to readable page names
+const getPageName = (pathname) => {
+  if (pathname.includes('dashboard')) return 'Dashboard';
+  if (pathname.includes('my-courses') || pathname.includes('learner-dashboard')) return 'My Courses';
+  if (pathname.includes('catalog') || pathname.includes('course-search')) return 'Catalog';
+  if (pathname.includes('progress')) return 'Progress';
+  if (pathname.includes('discussion')) return 'Discussions';
+  if (pathname.includes('certificate')) return 'Certificates';
+  if (pathname.includes('profile')) return 'Profile';
+  if (pathname.includes('account')) return 'Account';
+  return 'Dashboard';
+};
+
 const DesktopHeader = ({
   mainMenu,
   secondaryMenu,
@@ -31,6 +45,17 @@ const DesktopHeader = ({
   loggedIn,
 }) => {
   const intl = useIntl();
+
+  // Get current page name from URL
+  let pageName = 'Dashboard';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const location = useLocation();
+    pageName = getPageName(location.pathname);
+  } catch (e) {
+    // useLocation may not be available in all contexts, fallback to window.location
+    pageName = getPageName(window.location.pathname);
+  }
 
   const renderUserMenu = () => (
     <Menu transitionClassName="menu-dropdown" transitionTimeout={250}>
@@ -74,8 +99,15 @@ const DesktopHeader = ({
         </a>
         <div className={`container-fluid ${logoClasses}`}>
           <div className="nav-container position-relative d-flex align-items-center">
-            {/* Left: empty — page title/breadcrumb injected by the consuming page */}
-            <div className="site-header-top__page-title" />
+
+            {/* Left: breadcrumb with current page name */}
+            <div className="site-header-top__page-title">
+              <span className="site-header-breadcrumb">
+                <span className="site-header-breadcrumb__home">Home</span>
+                <span className="site-header-breadcrumb__separator"> / </span>
+                <span className="site-header-breadcrumb__current">{pageName}</span>
+              </span>
+            </div>
 
             {/* Right: secondary menu + user (or logged-out items) */}
             <nav

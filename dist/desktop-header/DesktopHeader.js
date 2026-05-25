@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
+import { useLocation } from 'react-router-dom';
 
 // Local Components
 import DesktopUserMenuToggleSlot from '../plugin-slots/DesktopUserMenuToggleSlot';
@@ -17,6 +18,19 @@ import { desktopUserMenuDataShape } from './DesktopHeaderUserMenu';
 
 // i18n
 import messages from '../Header.messages';
+
+// Map URL paths to readable page names
+var getPageName = function getPageName(pathname) {
+  if (pathname.includes('dashboard')) return 'Dashboard';
+  if (pathname.includes('my-courses') || pathname.includes('learner-dashboard')) return 'My Courses';
+  if (pathname.includes('catalog') || pathname.includes('course-search')) return 'Catalog';
+  if (pathname.includes('progress')) return 'Progress';
+  if (pathname.includes('discussion')) return 'Discussions';
+  if (pathname.includes('certificate')) return 'Certificates';
+  if (pathname.includes('profile')) return 'Profile';
+  if (pathname.includes('account')) return 'Account';
+  return 'Dashboard';
+};
 var DesktopHeader = function DesktopHeader(_ref) {
   var mainMenu = _ref.mainMenu,
     secondaryMenu = _ref.secondaryMenu,
@@ -29,6 +43,17 @@ var DesktopHeader = function DesktopHeader(_ref) {
     username = _ref.username,
     loggedIn = _ref.loggedIn;
   var intl = useIntl();
+
+  // Get current page name from URL
+  var pageName = 'Dashboard';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    var location = useLocation();
+    pageName = getPageName(location.pathname);
+  } catch (e) {
+    // useLocation may not be available in all contexts, fallback to window.location
+    pageName = getPageName(window.location.pathname);
+  }
   var renderUserMenu = function renderUserMenu() {
     return /*#__PURE__*/React.createElement(Menu, {
       transitionClassName: "menu-dropdown",
@@ -79,7 +104,15 @@ var DesktopHeader = function DesktopHeader(_ref) {
     className: "nav-container position-relative d-flex align-items-center"
   }, /*#__PURE__*/React.createElement("div", {
     className: "site-header-top__page-title"
-  }), /*#__PURE__*/React.createElement("nav", {
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "site-header-breadcrumb"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "site-header-breadcrumb__home"
+  }, "Home"), /*#__PURE__*/React.createElement("span", {
+    className: "site-header-breadcrumb__separator"
+  }, " / "), /*#__PURE__*/React.createElement("span", {
+    className: "site-header-breadcrumb__current"
+  }, pageName))), /*#__PURE__*/React.createElement("nav", {
     "aria-label": intl.formatMessage(messages['header.label.secondary.nav']),
     className: "nav secondary-menu-container align-items-center ml-auto"
   }, loggedIn ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(DesktopSecondaryMenuSlot, {

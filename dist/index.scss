@@ -1,58 +1,99 @@
-// Add these styles to your existing header SCSS
-
-// Sidebar
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
 .site-sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 200px;
   height: 100vh;
-  background: #1a1d2e;
+  background: #1c2030;
   display: flex;
   flex-direction: column;
-  z-index: 100;
+  z-index: 1000;
 
   &__logo {
     padding: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    img { max-height: 36px; width: auto; }
+    display: flex;
+    align-items: center;
+
+    img {
+      max-height: 36px;
+      width: auto;
+    }
+
+    a {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+    }
   }
 
   &__nav {
     flex: 1;
-    padding: 8px 0;
+    padding: 12px 0;
     overflow-y: auto;
 
-    // Targets whatever anchor/button DesktopMainMenuSlot renders
-    a, button, .nav-link, .nav-item {
-      display: flex;
+    a,
+    button,
+    .nav-link,
+    .nav-item {
+      display: flex !important;
       align-items: center;
+      gap: 12px;
       width: 100%;
-      padding: 10px 16px;
-      font-size: 13.5px;
-      color: rgba(255, 255, 255, 0.55);
-      text-decoration: none;
-      background: transparent;
-      border: none;
+      padding: 11px 20px;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+      text-decoration: none !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
       text-align: left;
       cursor: pointer;
       position: relative;
       white-space: nowrap;
+      box-shadow: none !important;
+      letter-spacing: 0.01em;
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.07);
-        color: rgba(255, 255, 255, 0.9);
-        text-decoration: none;
+      // Icons inside nav items
+      svg,
+      i,
+      .btn-icon,
+      [class*="icon"] {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        opacity: 0.8;
       }
 
-      &.active, &[aria-current="page"] {
-        background: #5b5bd6;
-        color: #fff;
+      &:hover {
+        background: rgba(255, 255, 255, 0.07) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        text-decoration: none !important;
+      }
+
+      &.active,
+      &[aria-current="page"],
+      &.active:focus,
+      &.active:hover {
+        background: #5b5bd6 !important;
+        color: #fff !important;
+        font-weight: 600 !important;
+
+        svg,
+        i,
+        [class*="icon"] {
+          opacity: 1;
+        }
 
         &::before {
           content: '';
           position: absolute;
-          left: 0; top: 0; bottom: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
           width: 3px;
           background: #fff;
           border-radius: 0 2px 2px 0;
@@ -62,15 +103,80 @@
   }
 }
 
-// Top header — offset from sidebar
-.site-header-top {
+// ── TOP HEADER ────────────────────────────────────────────────────────────
+.site-header-desktop.site-header-top {
   margin-left: 200px;
   position: sticky;
   top: 0;
-  z-index: 99;
+  z-index: 999;
+  background: #fff;
+  border-bottom: 1px solid #e2e4e9;
+  box-shadow: none;
+
+  .nav-container {
+    height: 56px;
+    padding: 0 24px;
+  }
+
+  .logo {
+    display: none !important;
+  }
+
+  .secondary-menu-container {
+    gap: 12px;
+
+    a,
+    button {
+      color: #1a1d2e;
+      font-size: 13px;
+    }
+  }
+
+  .btn.btn-outline-primary {
+    border-color: #e2e4e9;
+    color: #1a1d2e;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+    background: transparent;
+
+    &:hover {
+      background: #f4f5f7;
+      border-color: #e2e4e9;
+      color: #1a1d2e;
+    }
+  }
 }
 
-// Push page body content to account for sidebar
+// ── BREADCRUMB ────────────────────────────────────────────────────────────
+.site-header-top__page-title {
+  display: flex;
+  align-items: center;
+}
+
+.site-header-breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+
+  &__home {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  &__separator {
+    color: rgba(0, 0, 0, 0.25);
+    margin: 0 4px;
+  }
+
+  &__current {
+    color: #1a1d2e;
+    font-weight: 600;
+    font-size: 14px;
+  }
+}
+
+// ── PUSH PAGE CONTENT RIGHT ───────────────────────────────────────────────
 body {
-  padding-left: 200px;
+  padding-left: 200px !important;
 }
