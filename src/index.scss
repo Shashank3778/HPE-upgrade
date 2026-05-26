@@ -303,3 +303,10 @@
 body {
   padding-left: 200px !important;
 }
+#root header.site-header-desktop .menu button {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  line-height: normal !important;
+}
