@@ -27,10 +27,6 @@ export const CourseCardActions = ({ cardId }) => {
       {(isArchived && !isEntitlement) && (
         <ViewCourseButton cardId={cardId} />
       )}
-      {!(isArchived || isEntitlement) && (hasStarted
-        ? <ResumeButton cardId={cardId} />
-        : <BeginCourseButton cardId={cardId} />
-      )}
     </ActionRow>
   );
 };
