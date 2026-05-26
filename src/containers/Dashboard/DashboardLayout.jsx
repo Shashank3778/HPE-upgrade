@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { Container, Col, Row } from '@openedx/paragon';
 
 import WidgetSidebarSlot from 'plugin-slots/WidgetSidebarSlot';
-
+import UpcomingDeadlines from './UpcomingDeadlines';
+import CertificatesWidget from './CertificatesWidget';
+import './widgets.scss';
 import hooks from './hooks';
 
 export const columnConfig = {
@@ -41,12 +43,17 @@ export const DashboardLayout = ({ children }) => {
           {children}
         </Col>
         <Col {...columnConfig.sidebar} className={['sidebar-column', !isCollapsed && 'not-collapsed']}>
+          {/* Our custom widgets */}
+          <UpcomingDeadlines />
+          <CertificatesWidget />
+          {/* Original plugin sidebar slot */}
           <WidgetSidebarSlot />
         </Col>
       </Row>
     </Container>
   );
 };
+
 DashboardLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };

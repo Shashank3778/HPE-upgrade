@@ -1,0 +1,147 @@
+// ── Shared widget styles ──────────────────────────────────────────────────
+.dashboard-widget {
+  background: #fff;
+  border: 1px solid #e2e4e9;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1d2e;
+    margin-bottom: 14px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+// ── Upcoming Deadlines ────────────────────────────────────────────────────
+.deadline-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 32px;
+  }
+
+  &__month {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.05em;
+  }
+
+  &__day {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1d2e;
+    line-height: 1.1;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1d2e;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__provider {
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 0;
+  }
+}
+
+// ── Certificates ──────────────────────────────────────────────────────────
+.certificates-count {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 14px;
+
+  &__number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #5b5bd6;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.certificates-empty {
+  &__msg {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.45);
+    margin: 0;
+  }
+}
+
+.certificate-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    background: #e8e8fd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1d2e;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__provider {
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 0;
+  }
+
+  &__link {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5b5bd6;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -11,6 +11,14 @@ const initializeList = async (user) => {
   return data;
 };
 
+// Fetch progress for a single course
+const getCourseProgress = async (courseId: string) => {
+  const { data } = await getAuthenticatedHttpClient().get(
+    urls.courseProgress(courseId),
+  );
+  return data;
+};
+
 const unenrollFromCourse = async ({ courseId }) => {
   const url = urls.courseUnenroll();
   const formData = new FormData();
@@ -84,6 +92,7 @@ const sendConfirmEmail = async (sendEmailUrl: string) => {
 
 export {
   initializeList,
+  getCourseProgress,
   unenrollFromCourse,
   updateEntitlementEnrollment,
   deleteEntitlementEnrollment,

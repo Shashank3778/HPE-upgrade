@@ -13,6 +13,9 @@ const courseUnenroll = () => `${getBaseUrl()}/change_enrollment`;
 const updateEmailSettings = () => `${getApiUrl()}/change_email_settings`;
 const entitlementEnrollment = (uuid) => `${getApiUrl()}/entitlements/v1/entitlements/${uuid}/enrollments`;
 
+// Progress API — uses LMS base URL directly
+const courseProgress = (courseId) => `${getBaseUrl()}/api/course_home/v1/progress/${courseId}`;
+
 // if url is null or absolute, return it as is
 export const updateUrl = (base, url) => ((url == null || url.startsWith('http://') || url.startsWith('https://')) ? url : `${base}${url}`);
 
@@ -34,6 +37,7 @@ export default StrictDict({
   getApiUrl,
   baseAppUrl,
   courseUnenroll,
+  courseProgress,
   creditPurchaseUrl,
   creditRequestUrl,
   entitlementEnrollment,

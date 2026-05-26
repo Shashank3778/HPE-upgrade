@@ -16,12 +16,29 @@
 
 @media (--pgn-size-breakpoint-max-width-lg) {
   .sidebar-column {
-    // grid are inheriting dir="ltr" from the body, so we need to override it
     [dir=ltr] & {
       padding: 0 var(--pgn-spacing-spacer-3);
     }
     [dir=rtl] & {
       padding: 0 var(--pgn-spacing-spacer-3);
     }
+  }
+}
+
+// Greeting
+.dashboard-greeting {
+  padding: 24px 24px 8px;
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1d2e;
+    margin-bottom: 4px;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.45);
+    margin: 0;
   }
 }
