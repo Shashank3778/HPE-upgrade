@@ -8,6 +8,8 @@ import {
   BookOpen,
   Compass,
   Layout,
+  GridView,
+
 } from '@openedx/paragon/icons';
 
 // Local Components
@@ -28,7 +30,7 @@ import messages from '../Header.messages';
 const SIDEBAR_TABS = [
   { label: 'Courses', href: '/', icon: BookOpen },
   { label: 'Discovery', href: '/courses', icon: Compass },
-  { label: 'Programs', href: '/programs', icon: Layout },
+  { label: 'Programs', href: '/programs', icon:   GridView },
 ];
 
 // Map URL paths to readable page names

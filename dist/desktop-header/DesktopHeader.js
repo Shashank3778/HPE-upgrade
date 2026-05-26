@@ -10,7 +10,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
 import { useLocation } from 'react-router-dom';
 import { Icon } from '@openedx/paragon';
-import { BookOpen, Compass, Layout } from '@openedx/paragon/icons';
+import { BookOpen, Compass, Layout, GridView } from '@openedx/paragon/icons';
 
 // Local Components
 import DesktopUserMenuToggleSlot from '../plugin-slots/DesktopUserMenuToggleSlot';
@@ -38,7 +38,7 @@ var SIDEBAR_TABS = [{
 }, {
   label: 'Programs',
   href: '/programs',
-  icon: Layout
+  icon: GridView
 }];
 
 // Map URL paths to readable page names
