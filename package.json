@@ -10,7 +10,7 @@
     "extends @edx/browserslist-config"
   ],
   "scripts": {
-    "postinstall": "node scripts/patch-babel.js",
+    "postinstall": "node -e \"const fs=require('fs'),p='node_modules/@openedx/frontend-build/config/babel.config.js',c=fs.readFileSync(p,'utf8');if(!c.includes('@babel/plugin-transform-private-methods')){fs.writeFileSync(p,c.replace('\\'@babel/plugin-proposal-class-properties\\',','\\'@babel/plugin-proposal-class-properties\\',\\n    \\'@babel/plugin-transform-private-methods\\','));console.log('Patched')}else{console.log('Already patched')}\"",
     "build": "fedx-scripts webpack",
     "i18n_extract": "fedx-scripts formatjs extract",
     "lint": "fedx-scripts eslint --ext .jsx,.js src/",
