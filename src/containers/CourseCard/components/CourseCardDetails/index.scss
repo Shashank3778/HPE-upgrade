@@ -32,4 +32,5 @@ a.course-card-title {
   color: rgba(0, 0, 0, 0.5);
   min-width: 30px;
   text-align: right;
+  flex-shrink: 0;
 }

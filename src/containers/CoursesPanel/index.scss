@@ -39,20 +39,21 @@
   }
 }
 
-// ── Course grid layout ────────────────────────────────────────────────────
+// ── Course grid ───────────────────────────────────────────────────────────
 .course-list-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 16px;
+  align-items: stretch;
 
-  // Pagination inside grid should span full width
+  // Pagination spans full width
   .pagination {
     grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
   .course-list-grid {
     grid-template-columns: repeat(2, 1fr);
   }
