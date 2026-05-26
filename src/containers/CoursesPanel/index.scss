@@ -38,3 +38,28 @@
     margin: var(--pgn-spacing-spacer-2) 0;
   }
 }
+
+// ── Course grid layout ────────────────────────────────────────────────────
+.course-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+
+  // Pagination inside grid should span full width
+  .pagination {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1200px) {
+  .course-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .course-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
