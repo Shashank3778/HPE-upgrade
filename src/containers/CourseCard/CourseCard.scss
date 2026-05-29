@@ -51,6 +51,8 @@
     .pgn__card-section {
       padding: 6px 0 0;
       flex: 1;
+       display: flex;          // add this
+  flex-direction: column; // add this
     }
 
     .pgn__card-footer {
