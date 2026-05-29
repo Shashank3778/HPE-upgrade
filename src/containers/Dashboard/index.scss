@@ -25,12 +25,12 @@
 #dashboard-container {
   background: #F5F6F7;
   min-height: 100vh;
-  padding: 0 !important;
+  padding: 0 24px !important;
 }
 
 // ── Greeting ──────────────────────────────────────────────────────────────
 .dashboard-greeting {
-  padding: 28px 32px 12px;
+  padding: 28px 0 12px;
 
   &__title {
     font-size: 28px;
@@ -52,9 +52,9 @@
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(135deg, var(--n100, #0d1b2a) 0%, #013649 100%);
-  border-radius: 0;
+  border-radius: 12px;
   padding: 24px 32px;
-  margin: 0 0 0;
+  margin: 0 0 24px;
   color: #fff;
   gap: 16px;
   width: 100%;
@@ -143,12 +143,7 @@
   }
 }
 
-// ── Dashboard content padding ─────────────────────────────────────────────
+// ── Dashboard content ─────────────────────────────────────────────────────
 #dashboard-content {
-  padding: 0 32px;
-
-  // CoursesPanel title alignment
-  .course-list-title {
-    padding-left: 0;
-  }
+  padding: 0;
 }
