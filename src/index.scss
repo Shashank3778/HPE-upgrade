@@ -470,3 +470,72 @@
 @import "course-tabs/course-tabs-navigation.scss";
 @import "courseware/course/sidebar/common/SidebarBase.scss";
 @import "courseware/course/sidebar/sidebars/course-outline/CourseOutlineTray.scss";
+
+/* ============================================================
+   Unit Navigation — Circle redesign
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+/* Override the old tab/button nav bar background */
+#courseware-sequence-navigation.sequence-navigation {
+  background: #ffffff;
+  border-bottom: 1px solid #e8e9ec;
+  padding: 0.5rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+
+  /* Remove old bordered pill styles */
+  .btn {
+    border: none !important;
+    height: auto !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    flex-grow: 0 !important;
+  }
+
+  /* Tabs container — horizontal scroll if too many units */
+  .sequence-navigation-tabs-container {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .sequence-navigation-tabs {
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  /* Previous / Next buttons */
+  .previous-btn,
+  .next-btn {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4f46e5;
+    white-space: nowrap;
+    padding: 0.3rem 0.5rem !important;
+    border: none !important;
+    background: transparent !important;
+    flex-shrink: 0;
+
+    &:hover { color: #4338ca; text-decoration: underline; }
+    &[disabled], &.disabled { color: #9ca3af; pointer-events: none; }
+  }
+}
+
+/* Breadcrumbs bar */
+.courseware-breadcrumb-bar {
+  background: #f5f6f8;
+  border-bottom: 1px solid #e8e9ec;
+  padding: 0.55rem 1.5rem;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-size: 0.8rem;
+
+  a { color: #6b7280; text-decoration: none; font-weight: 500; }
+  a:hover { color: #4f46e5; }
+}
