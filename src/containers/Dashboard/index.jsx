@@ -12,7 +12,6 @@ import DashboardLayout from './DashboardLayout';
 import hooks from './hooks';
 import './index.scss';
 
-// Get time-based greeting
 const getGreeting = () => {
   const hour = new Date().getHours();
   if (hour < 12) { return 'Good morning'; }
@@ -20,21 +19,38 @@ const getGreeting = () => {
   return 'Good evening';
 };
 
-// Get initials from course name
 const getCourseInitials = (name = '') => {
   const words = name.trim().split(' ').filter(Boolean);
   if (words.length === 1) { return words[0].substring(0, 2).toUpperCase(); }
   return (words[0][0] + words[1][0]).toUpperCase();
 };
 
-// Course banner
+// Format "last seen X ago"
+const getLastSeen = (lastEnrolled) => {
+  if (!lastEnrolled) { return null; }
+  const diff = Math.floor((new Date() - new Date(lastEnrolled)) / 1000);
+  if (diff < 60) { return 'last seen just now'; }
+  if (diff < 3600) { return `last seen ${Math.floor(diff / 60)}m ago`; }
+  if (diff < 86400) { return `last seen ${Math.floor(diff / 3600)}h ago`; }
+  return `last seen ${Math.floor(diff / 86400)}d ago`;
+};
+
+// Format days remaining
+const getDaysLeft = (endDate) => {
+  if (!endDate) { return null; }
+  const days = Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
+  if (days <= 0) { return 'Course ended'; }
+  return `Course ends in ${days} day${days !== 1 ? 's' : ''}`;
+};
+
 const CourseBanner = ({ courses }) => {
   const featured = useMemo(() => {
-    const enrolled = courses.filter((c) => c.enrollment?.isEnrolled && c.enrollment?.hasStarted);
+    // Prefer course with resumeUrl + hasStarted
+    const enrolled = courses.filter((c) => c.enrollment?.isEnrolled);
     if (!enrolled.length) { return null; }
-    const withEnd = enrolled.filter((c) => c.courseRun?.endDate);
-    if (withEnd.length) {
-      return withEnd.sort((a, b) => new Date(a.courseRun.endDate) - new Date(b.courseRun.endDate))[0];
+    const started = enrolled.filter((c) => c.enrollment?.hasStarted && c.courseRun?.resumeUrl);
+    if (started.length) {
+      return started.sort((a, b) => new Date(b.enrollment.lastEnrolled) - new Date(a.enrollment.lastEnrolled))[0];
     }
     return enrolled[0];
   }, [courses]);
@@ -43,10 +59,8 @@ const CourseBanner = ({ courses }) => {
 
   const courseName = featured.course?.courseName || '';
   const resumeUrl = featured.courseRun?.resumeUrl || featured.courseRun?.homeUrl || '#';
-  const endDate = featured.courseRun?.endDate;
-  const daysLeft = endDate
-    ? Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24))
-    : null;
+  const lastSeen = getLastSeen(featured.enrollment?.lastEnrolled);
+  const daysLeft = getDaysLeft(featured.courseRun?.endDate);
 
   return (
     <div className="course-banner">
@@ -64,10 +78,11 @@ const CourseBanner = ({ courses }) => {
         <a href={resumeUrl} className="course-banner__btn">
           Resume →
         </a>
-        {daysLeft !== null && (
-          <p className="course-banner__deadline">
-            {daysLeft <= 0 ? 'Course ended' : `Course ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}`}
-          </p>
+        {lastSeen && (
+          <p className="course-banner__meta">{lastSeen}</p>
+        )}
+        {daysLeft && (
+          <p className="course-banner__meta">{daysLeft}</p>
         )}
       </div>
     </div>
@@ -97,7 +112,6 @@ export const Dashboard = () => {
     <div id="dashboard-container" className="d-flex flex-column p-2 pt-0">
       <h1 className="sr-only">{pageTitle}</h1>
 
-      {/* Greeting */}
       {!isPending && (
         <div className="dashboard-greeting">
           <h2 className="dashboard-greeting__title">
@@ -111,7 +125,6 @@ export const Dashboard = () => {
         </div>
       )}
 
-      {/* Course banner */}
       {!isPending && courses.length > 0 && (
         <CourseBanner courses={courses} />
       )}
