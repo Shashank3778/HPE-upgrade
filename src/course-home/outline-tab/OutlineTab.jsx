@@ -36,6 +36,7 @@ const OutlineTab = () => {
     courseBlocks: {
       courses,
       sections,
+      sequences,
     } = {},
     datesWidget: {
       courseDateBlocks,
@@ -127,6 +128,7 @@ const OutlineTab = () => {
             expandAll={false}
             sectionIds={courses[rootCourseId].sectionIds}
             sections={sections}
+            sequences={sequences}
           />
         )}
 

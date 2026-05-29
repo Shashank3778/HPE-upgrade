@@ -6,26 +6,30 @@ interface Props {
   expandAll: boolean;
   sections: Record<string, any>;
   sectionIds: string[];
+  sequences?: Record<string, any>;
 }
 
 const CourseHomeSectionOutlineSlot: React.FC<Props> = ({
-  expandAll, sections, sectionIds,
+  expandAll, sections, sectionIds, sequences = {},
 }) => {
-  // Determine lock state: a section is locked if any prior section is incomplete
-  // (prerequisite gating — the section won't have showLink on its sequences)
-  const lockedState: boolean[] = sectionIds.map((sectionId, idx) => {
-    if (idx === 0) { return false; }
-    // If the previous section is not complete, this one is locked
-    const prevSection = sections[sectionIds[idx - 1]];
-    return prevSection && !prevSection.complete && idx > 0
-      ? !prevSection.complete
-      : false;
-  });
+  /**
+   * A section is locked ONLY if:
+   * 1. It has sequences AND
+   * 2. ALL of its sequences have showLink=false (LMS gating signal meaning access is blocked)
+   *
+   * This means: if a section has no prerequisite set in Studio, showLink will be true
+   * and the section will be open regardless of whether previous sections are complete.
+   */
+  const isSectionLocked = (sectionId: string): boolean => {
+    const section = sections[sectionId];
+    if (!section?.sequenceIds?.length) { return false; }
 
-  // Propagate lock forward: if a section is locked, all after it are too
-  for (let i = 1; i < lockedState.length; i++) {
-    if (lockedState[i - 1]) { lockedState[i] = true; }
-  }
+    // If every sequence in this section has showLink=false, it's gated
+    return section.sequenceIds.every((seqId: string) => {
+      const seq = sequences[seqId];
+      return seq && seq.showLink === false;
+    });
+  };
 
   return (
     <PluginSlot
@@ -36,10 +40,19 @@ const CourseHomeSectionOutlineSlot: React.FC<Props> = ({
       <ol id="courseHome-outline" className="list-unstyled" style={{ margin: 0, padding: 0 }}>
         {sectionIds.map((sectionId, idx) => {
           const section = sections[sectionId];
-          const isLocked = lockedState[idx];
-          const lockReason = isLocked
-            ? `Unlocks when Section ${idx} is complete`
-            : undefined;
+          const isLocked = isSectionLocked(sectionId);
+
+          // Find which section number is the prerequisite
+          // (the last non-locked section before this one)
+          let lockReason: string | undefined;
+          if (isLocked) {
+            // Find the previous section's number for the message
+            const prevIdx = idx - 1;
+            lockReason = prevIdx >= 0
+              ? `Unlocks when Section ${prevIdx + 1} is complete`
+              : 'Prerequisites not met';
+          }
+
           return (
             <Section
               key={sectionId}

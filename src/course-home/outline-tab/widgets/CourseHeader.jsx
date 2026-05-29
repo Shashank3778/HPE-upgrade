@@ -5,14 +5,14 @@ import { useModel } from '../../../generic/model-store';
 const CourseHeader = () => {
   const { courseId } = useSelector(state => state.courseHome);
 
-  const { title } = useModel('courseHomeMeta', courseId);
+  const courseHomeMeta = useModel('courseHomeMeta', courseId);
+  const { title, shortDescription } = courseHomeMeta || {};
 
   const {
     courseBlocks: { courses, sections, sequences } = {},
     resumeCourse: { hasVisitedCourse, url: resumeCourseUrl } = {},
   } = useModel('outline', courseId) || {};
 
-  // Compute stats from blocks
   const rootCourseId = courses && Object.keys(courses)[0];
   const rootCourse = rootCourseId ? courses[rootCourseId] : null;
   const sectionIds = rootCourse?.sectionIds || [];
@@ -42,30 +42,38 @@ const CourseHeader = () => {
     ? Math.round((completedSubsections / totalSubsections) * 100)
     : 0;
 
-  const totalHours = Math.round(totalEffortMinutes / 60) || 12;
+  const totalHours = Math.round(totalEffortMinutes / 60) || null;
 
-  // Find resume section label
-  let resumeLabel = 'Resume Course →';
-  if (currentSectionNumber !== null) {
-    resumeLabel = `Resume Section ${currentSectionNumber} →`;
-  }
+  const resumeLabel = currentSectionNumber !== null
+    ? `Resume Section ${currentSectionNumber} →`
+    : 'Resume Course →';
 
   return (
     <div className="course-header-banner">
       <div className="course-header-left">
         <h1 className="course-header-title">{title || 'Course'}</h1>
-        <p className="course-header-desc">
-          A four-section course on Python basics — data types, control flow, functions, and modules.
-          Hands-on problems throughout. Capstone at the end.
-        </p>
+
+        {/* Use shortDescription from Studio if available */}
+        {shortDescription && (
+          <p className="course-header-desc">{shortDescription}</p>
+        )}
+
         <div className="course-header-meta">
           <span><strong>{totalSections}</strong> sections</span>
           <span className="meta-dot">·</span>
           <span><strong>{totalSubsections}</strong> subsections</span>
-          <span className="meta-dot">·</span>
-          <span>~<strong>{totalHours}h</strong> total</span>
-          <span className="meta-dot">·</span>
-          <span>Instructor <strong className="instructor-name">Dr. R. Kapoor</strong></span>
+          {totalHours && (
+            <>
+              <span className="meta-dot">·</span>
+              <span>~<strong>{totalHours}h</strong> total</span>
+            </>
+          )}
+          {courseHomeMeta?.instructorName && (
+            <>
+              <span className="meta-dot">·</span>
+              <span>Instructor <strong className="instructor-name">{courseHomeMeta.instructorName}</strong></span>
+            </>
+          )}
         </div>
       </div>
 
@@ -77,12 +85,7 @@ const CourseHeader = () => {
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${progressPct}%` }} />
           </div>
-          <a
-            href={resumeCourseUrl}
-            className="resume-btn"
-          >
-            {resumeLabel}
-          </a>
+          <a href={resumeCourseUrl} className="resume-btn">{resumeLabel}</a>
         </div>
       )}
     </div>
