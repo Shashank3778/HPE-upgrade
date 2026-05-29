@@ -7,6 +7,7 @@ import { ALERT_TYPES, AlertList } from '../generic/user-messages';
 import Alert from '../generic/user-messages/Alert';
 import MasqueradeWidget from './masquerade-widget';
 import messages from './messages';
+import './instructor-toolbar.scss';
 import { useAccessExpirationMasqueradeBanner } from '../alerts/access-expiration-alert';
 import { useCourseStartMasqueradeBanner } from '../alerts/course-start-alert';
 

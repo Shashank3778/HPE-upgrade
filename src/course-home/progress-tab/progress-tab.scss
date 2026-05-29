@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --pt-bg: #f5f6f8;
+  --pt-card: #ffffff;
+  --pt-border: #e8e9ec;
+  --pt-text: #111827;
+  --pt-muted: #6b7280;
+  --pt-light: #9ca3af;
+  --pt-green: #16a34a;
+  --pt-green-bg: #dcfce7;
+  --pt-blue: #4f46e5;
+  --pt-blue-bg: #eef2ff;
+  --pt-font: 'DM Sans', -apple-system, sans-serif;
+}
+
+.progress-redesign {
+  font-family: var(--pt-font);
+  background: var(--pt-bg);
+  min-height: 100vh;
+  padding: 2rem 2.5rem 3rem;
+
+  // ── Page title ──────────────────────────────────────────
+  .progress-page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pt-text);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .progress-page-subtitle {
+    font-size: 0.85rem;
+    color: var(--pt-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  // ── Stats row ────────────────────────────────────────────
+  .progress-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 540px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stat-card {
+    background: var(--pt-card);
+    border: 1px solid var(--pt-border);
+    border-radius: 10px;
+    padding: 1.1rem 1.3rem 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--pt-light);
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--pt-text);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+    display: block;
+
+    span.stat-unit {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+  }
+
+  .stat-sub {
+    font-size: 0.78rem;
+
+    &.green { color: var(--pt-green); }
+    &.blue  { color: var(--pt-blue); }
+    &.muted { color: var(--pt-muted); }
+  }
+
+  // ── Subsection grades table ───────────────────────────────
+  .grades-card {
+    background: var(--pt-card);
+    border: 1px solid var(--pt-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .grades-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.3rem;
+    border-bottom: 1px solid var(--pt-border);
+  }
+
+  .grades-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--pt-text);
+    margin: 0;
+  }
+
+  .gradebook-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--pt-blue);
+    border: 1px solid var(--pt-border);
+    border-radius: 6px;
+    padding: 0.3rem 0.7rem;
+    background: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.12s;
+
+    &:hover { background: var(--pt-blue-bg); }
+  }
+
+  // Table
+  .grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .grades-table thead tr {
+    background: #f8f9fb;
+  }
+
+  .grades-table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--pt-text);
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--pt-border);
+
+    &.text-right { text-align: right; }
+  }
+
+  .grades-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--pt-border);
+    color: var(--pt-text);
+    vertical-align: middle;
+
+    &.text-right { text-align: right; }
+    &.muted { color: var(--pt-muted); }
+  }
+
+  .grades-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .grades-table tr.row-muted td {
+    color: var(--pt-light);
+  }
+
+  .grades-table tr.row-muted td a {
+    color: var(--pt-light);
+  }
+
+  .subsection-link {
+    color: var(--pt-text);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover { color: var(--pt-blue); text-decoration: underline; }
+  }
+
+  .grades-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.3rem;
+    border-top: 1px solid var(--pt-border);
+    font-size: 0.75rem;
+    color: var(--pt-muted);
+    background: #fafafa;
+  }
+
+  .export-link {
+    color: var(--pt-blue);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.78rem;
+
+    &:hover { text-decoration: underline; }
+  }
+}
