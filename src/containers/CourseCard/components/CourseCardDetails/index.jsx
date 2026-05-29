@@ -20,15 +20,12 @@ export const CourseCardDetails = ({ cardId }) => {
     changeOrLeaveSessionMessage,
   } = useCardDetailsData({ cardId });
 
-  // Get courseId for progress API
   const courseData = useCourseData(cardId);
   const courseId = courseData?.courseRun?.courseId;
-
-  // Fetch progress
   const { percentComplete, isLoading } = useCourseProgress(courseId);
 
   return (
-    <div data-testid="CourseCardDetails">
+    <div data-testid="CourseCardDetails" className="course-card-details">
       <span className="small">
         {providerName} • {courseNumber}
         {!(isEntitlement && !isFulfilled) && accessMessage && (
@@ -44,18 +41,18 @@ export const CourseCardDetails = ({ cardId }) => {
         ) : null}
       </span>
 
-      {/* Progress Bar */}
-      {!isLoading && courseId && (
-        <div className="course-progress-container">
-          <div className="course-progress-bar">
-            <div
-              className="course-progress-bar__fill"
-              style={{ width: `${percentComplete}%` }}
-            />
-          </div>
-          <span className="course-progress-bar__label">{percentComplete}%</span>
+      {/* Progress Bar — always at bottom */}
+      <div className="course-progress-container">
+        <div className="course-progress-bar">
+          <div
+            className="course-progress-bar__fill"
+            style={{ width: `${isLoading || !courseId ? 0 : percentComplete}%` }}
+          />
         </div>
-      )}
+        <span className="course-progress-bar__label">
+          {isLoading || !courseId ? '—' : `${percentComplete}%`}
+        </span>
+      </div>
     </div>
   );
 };

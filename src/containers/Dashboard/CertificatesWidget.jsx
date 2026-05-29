@@ -1,6 +1,16 @@
 import React, { useMemo } from 'react';
 import { useInitializeLearnerHome } from 'data/hooks';
-import { baseAppUrl } from 'data/services/lms/urls';
+
+// Color palette for badges
+const BADGE_COLORS = ['#5b5bd6', '#1d9e75', '#e67e22', '#e74c3c', '#8e44ad', '#2980b9'];
+const getBadgeColor = (index) => BADGE_COLORS[index % BADGE_COLORS.length];
+
+// Get 2-letter initials from course name
+const getCourseInitials = (name = '') => {
+  const words = name.trim().split(' ').filter(Boolean);
+  if (words.length === 1) { return words[0].substring(0, 2).toUpperCase(); }
+  return (words[0][0] + words[1][0]).toUpperCase();
+};
 
 export const CertificatesWidget = () => {
   const { data } = useInitializeLearnerHome();
@@ -11,51 +21,47 @@ export const CertificatesWidget = () => {
     [courses],
   );
 
+  const visibleBadges = earnedCerts.slice(0, 3);
+  const extraCount = earnedCerts.length - visibleBadges.length;
+
   return (
-    <div className="dashboard-widget">
-      <h3 className="dashboard-widget__title">Certificates</h3>
-      {earnedCerts.length === 0 ? (
-        <div className="certificates-empty">
-          <p className="certificates-empty__msg">
-            Complete a course to earn your first certificate!
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className="certificates-count">
-            <span className="certificates-count__number">{earnedCerts.length}</span>
-            <span className="certificates-count__label">
-              certificate{earnedCerts.length > 1 ? 's' : ''} earned
-            </span>
+    <div className="dashboard-widget cert-widget">
+      <div className="cert-widget__header">
+        <h3 className="dashboard-widget__title">Certificates</h3>
+        {earnedCerts.length > 0 && (
+          <a href="/dashboard" className="cert-widget__view-all">View all →</a>
+        )}
+      </div>
+
+      {/* Count */}
+      <div className="cert-widget__count">
+        <span className="cert-widget__number">{earnedCerts.length}</span>
+        <span className="cert-widget__label">earned this year</span>
+      </div>
+
+      {/* Badges row */}
+      <div className="cert-widget__badges">
+        {visibleBadges.map((c, i) => (
+          <div
+            key={c.courseRun?.courseId || i}
+            className="cert-badge"
+            style={{ background: getBadgeColor(i) }}
+            title={c.course?.courseName}
+          >
+            {getCourseInitials(c.course?.courseName)}
           </div>
-          <div className="dashboard-widget__list">
-            {earnedCerts.map((c) => (
-              <div key={c.courseRun?.courseId} className="certificate-item">
-                <div className="certificate-item__icon">
-                  {/* Medal icon */}
-                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#5b5bd6" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                </div>
-                <div className="certificate-item__info">
-                  <p className="certificate-item__name">{c.course?.courseName}</p>
-                  <p className="certificate-item__provider">{c.courseProvider?.name}</p>
-                </div>
-                {c.certificate?.certPreviewUrl && (
-                  <a
-                    href={baseAppUrl(c.certificate.certPreviewUrl)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="certificate-item__link"
-                  >
-                    View
-                  </a>
-                )}
-              </div>
-            ))}
+        ))}
+        {extraCount > 0 && (
+          <div className="cert-badge cert-badge--extra">
+            +{extraCount}
           </div>
-        </>
-      )}
+        )}
+      </div>
+
+      {/* Link */}
+      <a href="/dashboard" className="cert-widget__link">
+        See your certificates →
+      </a>
     </div>
   );
 };
