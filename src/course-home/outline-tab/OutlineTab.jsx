@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -20,8 +20,6 @@ import UpgradeToShiftDatesAlert from '../suggested-schedule-messaging/UpgradeToS
 import { fetchOutlineTab } from '../data';
 import './outline-tab.scss';
 
-const TABS = ['Outline', 'Progress', 'Dates', 'Discussion', 'Notes', 'Bookmarks'];
-
 const OutlineTab = () => {
   const {
     courseId,
@@ -31,8 +29,6 @@ const OutlineTab = () => {
     isSelfPaced,
     org,
   } = useModel('courseHomeMeta', courseId);
-
-  const [activeTab, setActiveTab] = useState('Outline');
 
   const {
     courseBlocks: {
@@ -98,21 +94,6 @@ const OutlineTab = () => {
     <div className="outline-redesign" data-learner-type={learnerType}>
       {/* Course Header with progress */}
       <CourseHeader />
-
-      {/* Tab navigation */}
-      <nav className="outline-tab-nav" aria-label="Course tabs">
-        {TABS.map(tab => (
-          <button
-            key={tab}
-            type="button"
-            className={`outline-tab-nav-link${activeTab === tab ? ' active' : ''}`}
-            onClick={() => setActiveTab(tab)}
-            aria-current={activeTab === tab ? 'page' : undefined}
-          >
-            {tab}
-          </button>
-        ))}
-      </nav>
 
       {/* Alerts */}
       <div className="outline-body">
