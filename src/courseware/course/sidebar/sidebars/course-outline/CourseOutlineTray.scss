@@ -1,101 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Sidebar wrapper ─────────────────────────────────────── */
 .outline-sidebar-wrapper {
-    width: 32.125rem;
-    max-width: 100%;
-    position: relative;
-    flex-shrink: 0;
+  width: 20rem;
+  max-width: 100%;
+  position: relative;
+  flex-shrink: 0;
+  border-right: 1px solid #e8e9ec;
+  background: #fff;
+  font-family: 'DM Sans', -apple-system, sans-serif;
 }
 
-.outline-sidebar {
-    @media (--pgn-size-breakpoint-min-width-xl) {
-        left: 0;
-        top: 0;
-    }
-}
-
+/* ── Sidebar heading row ─────────────────────────────────── */
 .outline-sidebar-heading-wrapper {
-    border: 1px solid #d7d3d1;
+  border: none !important;
+  border-bottom: 1px solid #e8e9ec !important;
+  background: #fff !important;
+  padding: 0.7rem 1rem !important;
 
-    &.sticky {
-        position: sticky;
-        top: 0;
-        left: 0;
-        z-index: 5;
-    }
+  &.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
 
-    .outline-sidebar-heading {
-        font-weight: var(--pgn-typography-font-weight-bold);
-    }
+  .outline-sidebar-heading {
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    margin: 0 !important;
+  }
+
+  /* Back arrow button */
+  .btn-link {
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    text-decoration: none !important;
+    padding: 0 !important;
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+  }
+
+  .outline-sidebar-toggle-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #9ca3af !important;
+    padding: 0.2rem !important;
+    border-radius: 6px !important;
+
+    &:hover { background: #f3f4f6 !important; color: #374151 !important; }
+  }
 }
 
+/* ── Section list items (drill-down view) ────────────────── */
 .course-sidebar-section {
-    background: var(--pgn-color-white);
-    border: 1px solid #d7d3d1;
+  background: #fff !important;
+  border: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
 
-    button {
-        line-height: 1.75rem;
+  .btn {
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    font-size: 0.83rem !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    padding: 0.65rem 1rem !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    text-align: left !important;
+    border: none !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
 
-        &.focus::before,
-        &:focus::before {
-            border-radius: 0;
-        }
+    &.bg-info-100 {
+      background: #eef2ff !important;
+      color: #4f46e5 !important;
     }
+    &:hover { background: #f9fafb !important; }
+  }
 }
 
-.outline-sidebar-toggle-btn {
-    font-size: 1.5rem;
+/* ── Collapsible (sequence/subsection rows) ──────────────── */
+.pgn__collapsible,
+.card.pgn__collapsible {
+  border: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  background: #fff !important;
 
-    .collapsed & {
-        transform: scale(-1, 1);
-    }
+  .pgn__collapsible-trigger,
+  .card-header {
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    font-size: 0.83rem !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    padding: 0.65rem 1rem !important;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 0 !important;
+
+    &:hover { background: #f9fafb !important; }
+  }
+
+  .pgn__collapsible-body,
+  .card-body {
+    padding: 0 !important;
+    background: #f9fafb !important;
+  }
 }
 
-#outline-sidebar-outline {
-    margin-top: -1px;
+/* ── Unit rows ───────────────────────────────────────────── */
+.course-sidebar-section li,
+ol li {
+  list-style: none;
+}
 
-    @media (--pgn-size-breakpoint-min-width-xl) {
-        margin-bottom: 0;
+li.bg-info-100 {
+  background: #eef2ff !important;
+}
+
+/* UnitLinkWrapper — the clickable unit row */
+a, .unit-link {
+  &[href*="/course/"] {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    padding: 0.55rem 1rem 0.55rem 1.4rem !important;
+    text-decoration: none !important;
+    color: #374151 !important;
+    font-size: 0.81rem !important;
+    font-weight: 400 !important;
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    border-top: 1px solid #f3f4f6 !important;
+    transition: background 0.1s !important;
+
+    &:hover {
+      background: #f3f4f6 !important;
+      color: #111827 !important;
     }
+  }
+}
 
-    li {
-        font-size: 1rem;
-        line-height: 1.5rem;
-
-        .collapsible-trigger {
-            border-radius: 0;
-            padding: var(--pgn-spacing-spacer-3-5) var(--pgn-spacing-spacer-4) var(--pgn-spacing-spacer-3-5) var(--pgn-spacing-spacer-5);
-
-            @media (--pgn-size-breakpoint-max-width-sm) {
-                padding-left: var(--pgn-spacing-spacer-4);
-            }
-
-            &:hover {
-                background-color: var(--pgn-color-light-500);
-            }
-
-            .collapsible-icon {
-                margin-inline-start: initial;
-            }
-        }
-
-        &:last-child .pgn_collapsible {
-            margin-bottom: 0px !important;
-        }
-    }
-
-    .collapsible-body {
-        padding: 0;
-
-        ol li > a {
-            padding: var(--pgn-spacing-spacer-3-5) var(--pgn-spacing-spacer-4) var(--pgn-spacing-spacer-3-5) var(--pgn-spacing-spacer-5-5);
-
-            @media (--pgn-size-breakpoint-max-width-sm) {
-                padding-left: var(--pgn-spacing-spacer-4-5);
-            }
-
-            &:hover {
-                text-decoration: none;
-                background-color: var(--pgn-color-light-500);
-            }
-        }
-    }
+li.bg-info-100 a {
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
+  font-weight: 500 !important;
 }
