@@ -5,6 +5,7 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { CourseOutlineTabNotificationsSlot } from '../../plugin-slots/CourseOutlineTabNotificationsSlot';
 import { AlertList } from '../../generic/user-messages';
+import { CourseTabsNavigation } from '../../course-tabs';
 
 import CourseHeader from './widgets/CourseHeader';
 import useCertificateAvailableAlert from './alerts/certificate-status-alert';
@@ -28,6 +29,7 @@ const OutlineTab = () => {
   const {
     isSelfPaced,
     org,
+    tabs,
   } = useModel('courseHomeMeta', courseId);
 
   const {
@@ -94,6 +96,9 @@ const OutlineTab = () => {
     <div className="outline-redesign" data-learner-type={learnerType}>
       {/* Course Header with progress */}
       <CourseHeader />
+
+      {/* Real dynamic tab navigation — rendered here so it sits below the course header */}
+      <CourseTabsNavigation tabs={tabs || []} activeTabSlug="outline" />
 
       {/* Alerts */}
       <div className="outline-body">

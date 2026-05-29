@@ -80,7 +80,9 @@ const LoadedTabPage = ({
             ...logistrationAlert,
           }}
         />
-        <CourseTabsNavigation tabs={tabs} className="mb-3" activeTabSlug={activeTabSlug} />
+        {activeTabSlug !== 'outline' && (
+          <CourseTabsNavigation tabs={tabs} className="mb-3" activeTabSlug={activeTabSlug} />
+        )}
         <div id="main-content" className="container-xl">
           {children}
         </div>
