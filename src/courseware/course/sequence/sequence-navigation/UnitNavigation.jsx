@@ -1,22 +1,22 @@
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { GetCourseExitNavigation } from '../../course-exit';
 import { useSequenceNavigationMetadata } from './hooks';
 import { useModel } from '../../../../generic/model-store';
-import { useIntl } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 
-const ChevronLeft = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M9 3L5 7L9 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+const ChevLeft = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <path d="M8 2.5L4.5 6.5L8 10.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const ChevronRight = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+const ChevRight = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <path d="M5 2.5L8.5 6.5L5 10.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -39,95 +39,107 @@ const UnitNavigation = ({
     previousLink,
   } = useSequenceNavigationMetadata(sequenceId, unitId);
 
+  // Get sequence and all units from models
   const sequence = useModel('sequences', sequenceId);
-  const units = useSelector(state => state.models.units) || {};
+  const allSequenceIds = useSelector(state => state.courseware.sequenceIds || []);
+  const allSequences = useSelector(state => state.models.sequences || {});
+  const allUnits = useSelector(state => state.models.units || {});
 
-  // Get adjacent unit titles
+  // Find prev/next unit titles
   const unitIndex = sequence?.unitIds?.indexOf(unitId) ?? -1;
-  const prevUnitId = unitIndex > 0 ? sequence.unitIds[unitIndex - 1] : null;
-  const nextUnitId = unitIndex >= 0 && unitIndex < (sequence?.unitIds?.length - 1)
-    ? sequence.unitIds[unitIndex + 1] : null;
-  const prevTitle = prevUnitId ? (units[prevUnitId]?.title || 'Previous') : 'Previous';
-  const nextUnitTitle = nextUnitId ? (units[nextUnitId]?.title || 'Next') : null;
+  const sequenceIndex = allSequenceIds.indexOf(sequenceId);
 
+  // Previous title
+  let prevTitle = 'Previous';
+  if (unitIndex > 0) {
+    const prevId = sequence.unitIds[unitIndex - 1];
+    prevTitle = allUnits[prevId]?.title || 'Previous';
+  } else if (sequenceIndex > 0) {
+    // Previous is last unit of previous sequence
+    const prevSeqId = allSequenceIds[sequenceIndex - 1];
+    const prevSeq = allSequences[prevSeqId];
+    if (prevSeq?.unitIds?.length) {
+      const lastId = prevSeq.unitIds[prevSeq.unitIds.length - 1];
+      prevTitle = allUnits[lastId]?.title || prevSeq.title || 'Previous';
+    }
+  }
+
+  // Next title
+  let nextTitle = 'Next';
   const { exitActive, exitText } = GetCourseExitNavigation(courseId, intl);
-  const isDisabledNext = isLastUnit && !exitActive;
-  const nextTitle = isLastUnit && exitText ? exitText : (nextUnitTitle || intl.formatMessage(messages.nextButton));
+  if (isLastUnit && exitText) {
+    nextTitle = exitText;
+  } else if (unitIndex >= 0 && unitIndex < (sequence?.unitIds?.length - 1)) {
+    const nextId = sequence.unitIds[unitIndex + 1];
+    nextTitle = allUnits[nextId]?.title || 'Next';
+  } else if (sequenceIndex < allSequenceIds.length - 1) {
+    // Next is first unit of next sequence
+    const nextSeqId = allSequenceIds[sequenceIndex + 1];
+    const nextSeq = allSequences[nextSeqId];
+    if (nextSeq?.unitIds?.length) {
+      const firstId = nextSeq.unitIds[0];
+      nextTitle = allUnits[firstId]?.title || nextSeq.title || 'Next';
+    }
+  }
 
+  const isDisabledNext = isLastUnit && !exitActive;
   const navLink = (link) => (link && isPreview ? `/preview${link}` : link);
 
-  // Shared button base styles
-  const btnBase = {
+  const base = {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '0.4rem',
+    gap: '0.35rem',
     fontFamily: "'DM Sans', -apple-system, sans-serif",
     fontSize: '0.84rem',
     fontWeight: 500,
     borderRadius: '8px',
     padding: '0.45rem 1rem',
     textDecoration: 'none',
-    cursor: 'pointer',
-    border: 'none',
     transition: 'all 0.15s ease',
     lineHeight: 1.4,
+    whiteSpace: 'nowrap',
   };
 
-  const prevBtn = isFirstUnit ? null : (
-    <Link
-      to={navLink(previousLink)}
-      onClick={onClickPrevious}
-      style={{
-        ...btnBase,
-        background: '#fff',
-        border: '1px solid #d1d5db',
-        color: '#374151',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
-    >
-      <ChevronLeft />
-      <span>Previous · {prevTitle}</span>
-    </Link>
-  );
-
-  const nextBtn = isDisabledNext ? null : (
-    <Link
-      to={navLink(nextLink)}
-      onClick={onClickNext}
-      style={{
-        ...btnBase,
-        background: '#4f46e5',
-        color: '#fff',
-        border: '1px solid #4f46e5',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = '#4338ca'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = '#4f46e5'; }}
-    >
-      <span>{nextTitle}</span>
-      <ChevronRight />
-    </Link>
-  );
-
-  // Top nav — hidden (we don't want the top pill tabs or top arrows)
-  if (isAtTop) {
-    return null;
-  }
+  // Hide top nav entirely
+  if (isAtTop) { return null; }
 
   return (
     <div style={{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '1rem 0',
+      padding: '1.1rem 0',
       borderTop: '1px solid #e8e9ec',
       marginTop: '1.5rem',
       fontFamily: "'DM Sans', -apple-system, sans-serif",
     }}
     >
-      <div>{prevBtn}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {nextBtn}
+      {/* Previous */}
+      <div>
+        {!isFirstUnit && previousLink && (
+          <Link
+            to={navLink(previousLink)}
+            onClick={onClickPrevious}
+            style={{ ...base, background: '#fff', border: '1px solid #d1d5db', color: '#374151' }}
+          >
+            <ChevLeft />
+            Previous · {prevTitle}
+          </Link>
+        )}
+      </div>
+
+      {/* Next */}
+      <div>
+        {!isDisabledNext && nextLink && (
+          <Link
+            to={navLink(nextLink)}
+            onClick={onClickNext}
+            style={{ ...base, background: '#4f46e5', border: '1px solid #4f46e5', color: '#fff' }}
+          >
+            {nextTitle} · Next
+            <ChevRight />
+          </Link>
+        )}
       </div>
     </div>
   );

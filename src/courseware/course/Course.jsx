@@ -16,6 +16,7 @@ import ContentTools from './content-tools';
 import Sequence from './sequence';
 import { CourseOutlineMobileSidebarTriggerSlot } from '../../plugin-slots/CourseOutlineMobileSidebarTriggerSlot';
 import { CourseBreadcrumbsSlot } from '../../plugin-slots/CourseBreadcrumbsSlot';
+import CourseBreadcrumbs from './breadcrumbs';
 
 const Course = ({
   courseId,
@@ -76,14 +77,16 @@ const Course = ({
       <Helmet>
         <title>{`${pageTitleBreadCrumbs.join(' | ')} | ${getConfig().SITE_NAME}`}</title>
       </Helmet>
-      <div className="position-relative d-flex align-items-xl-center mb-4 mt-1 flex-column flex-xl-row">
-        <CourseBreadcrumbsSlot
-          courseId={courseId}
-          sectionId={section ? section.id : null}
-          sequenceId={sequenceId}
-          isStaff={isStaff}
-          unitId={unitId}
-        />
+      {/* Full-width breadcrumb bar */}
+      <CourseBreadcrumbs
+        courseId={courseId}
+        sectionId={section ? section.id : null}
+        sequenceId={sequenceId}
+        isStaff={isStaff}
+        unitId={unitId}
+      />
+
+      <div className="position-relative d-flex align-items-xl-center mb-2 mt-1 flex-column flex-xl-row">
         {shouldDisplayLearnerTools && (
           <LearnerToolsSlot
             enrollmentMode={course.enrollmentMode}

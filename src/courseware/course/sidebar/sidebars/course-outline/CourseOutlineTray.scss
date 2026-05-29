@@ -1,40 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
-/* ── Sidebar wrapper ─────────────────────────────────────── */
 .outline-sidebar-wrapper {
-  width: 20rem;
+  width: 19rem;
   max-width: 100%;
-  position: relative;
   flex-shrink: 0;
   border-right: 1px solid #e8e9ec;
   background: #fff;
   font-family: 'DM Sans', -apple-system, sans-serif;
 }
 
-/* ── Sidebar heading row ─────────────────────────────────── */
+/* Heading row */
 .outline-sidebar-heading-wrapper {
   border: none !important;
   border-bottom: 1px solid #e8e9ec !important;
   background: #fff !important;
-  padding: 0.7rem 1rem !important;
+  padding: 0.6rem 0.75rem !important;
 
-  &.sticky {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-  }
+  &.sticky { position: sticky; top: 0; z-index: 5; }
 
   .outline-sidebar-heading {
-    font-size: 0.88rem !important;
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    font-size: 0.85rem !important;
     font-weight: 700 !important;
     color: #111827 !important;
-    font-family: 'DM Sans', -apple-system, sans-serif !important;
     margin: 0 !important;
   }
 
-  /* Back arrow button */
   .btn-link {
-    font-size: 0.88rem !important;
+    font-size: 0.85rem !important;
     font-weight: 700 !important;
     color: #111827 !important;
     text-decoration: none !important;
@@ -46,14 +39,13 @@
     background: transparent !important;
     border: none !important;
     color: #9ca3af !important;
-    padding: 0.2rem !important;
-    border-radius: 6px !important;
-
-    &:hover { background: #f3f4f6 !important; color: #374151 !important; }
+    padding: 0.15rem !important;
+    border-radius: 5px !important;
+    &:hover { background: #f3f4f6 !important; }
   }
 }
 
-/* ── Section list items (drill-down view) ────────────────── */
+/* Section-level items */
 .course-sidebar-section {
   background: #fff !important;
   border: none !important;
@@ -63,91 +55,50 @@
 
   .btn {
     font-family: 'DM Sans', -apple-system, sans-serif !important;
-    font-size: 0.83rem !important;
+    font-size: 0.82rem !important;
     font-weight: 500 !important;
     color: #374151 !important;
-    padding: 0.65rem 1rem !important;
+    padding: 0.55rem 0.75rem !important;
     background: transparent !important;
     border-radius: 0 !important;
-    text-align: left !important;
     border: none !important;
     width: 100% !important;
     display: flex !important;
     align-items: center !important;
+    gap: 0.5rem !important;
+    text-align: left !important;
 
-    &.bg-info-100 {
-      background: #eef2ff !important;
-      color: #4f46e5 !important;
-    }
+    &.bg-info-100 { background: #eef2ff !important; color: #4f46e5 !important; }
     &:hover { background: #f9fafb !important; }
   }
 }
 
-/* ── Collapsible (sequence/subsection rows) ──────────────── */
-.pgn__collapsible,
-.card.pgn__collapsible {
+/* Remove paragon card/collapsible defaults */
+.pgn__collapsible, .card.pgn__collapsible {
   border: none !important;
-  border-bottom: 1px solid #f3f4f6 !important;
   border-radius: 0 !important;
   margin: 0 !important;
   box-shadow: none !important;
   background: #fff !important;
 
-  .pgn__collapsible-trigger,
-  .card-header {
-    font-family: 'DM Sans', -apple-system, sans-serif !important;
-    font-size: 0.83rem !important;
-    font-weight: 600 !important;
-    color: #111827 !important;
-    padding: 0.65rem 1rem !important;
+  .pgn__collapsible-trigger, .card-header {
+    padding: 0 !important;
     background: #fff !important;
     border: none !important;
     border-radius: 0 !important;
-
-    &:hover { background: #f9fafb !important; }
   }
-
-  .pgn__collapsible-body,
-  .card-body {
+  .pgn__collapsible-body, .card-body {
     padding: 0 !important;
-    background: #f9fafb !important;
   }
 }
 
-/* ── Unit rows ───────────────────────────────────────────── */
-.course-sidebar-section li,
-ol li {
-  list-style: none;
-}
-
-li.bg-info-100 {
-  background: #eef2ff !important;
-}
-
-/* UnitLinkWrapper — the clickable unit row */
-a, .unit-link {
-  &[href*="/course/"] {
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.6rem !important;
-    padding: 0.55rem 1rem 0.55rem 1.4rem !important;
-    text-decoration: none !important;
-    color: #374151 !important;
-    font-size: 0.81rem !important;
-    font-weight: 400 !important;
-    font-family: 'DM Sans', -apple-system, sans-serif !important;
-    border-top: 1px solid #f3f4f6 !important;
-    transition: background 0.1s !important;
-
-    &:hover {
-      background: #f3f4f6 !important;
-      color: #111827 !important;
-    }
-  }
-}
-
-li.bg-info-100 a {
-  background: #eef2ff !important;
-  color: #4f46e5 !important;
-  font-weight: 500 !important;
+/* Unit link rows */
+a.row.w-100 {
+  text-decoration: none !important;
+  color: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
 }

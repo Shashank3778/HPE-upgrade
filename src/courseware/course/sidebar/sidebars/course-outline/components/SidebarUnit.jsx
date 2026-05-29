@@ -1,54 +1,81 @@
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { useIntl } from '@edx/frontend-platform/i18n';
-
-import messages from '../messages';
-import UnitIcon, { UNIT_ICON_TYPES } from './UnitIcon';
 import UnitLinkWrapper from './UnitLinkWrapper';
+import { UNIT_ICON_TYPES } from './UnitIcon';
+
+// Inline SVG icons — pixel-matched to design
+const CheckMark = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const OrangeDot = () => (
+  <svg width="8" height="8" viewBox="0 0 8 8">
+    <circle cx="4" cy="4" r="4" fill="#f59e0b"/>
+  </svg>
+);
+
+const GreyCircle = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+    <circle cx="6.5" cy="6.5" r="5.5" stroke="#d1d5db" strokeWidth="1.5"/>
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+    <rect x="2.5" y="6" width="8" height="6" rx="1.5" stroke="#f97316" strokeWidth="1.4"/>
+    <path d="M4 6V4.5a2.5 2.5 0 015 0V6" stroke="#f97316" strokeWidth="1.4"/>
+  </svg>
+);
 
 const SidebarUnit = ({
   id,
   courseId,
   sequenceId,
-  isFirst,
   unit,
   isActive,
   isLocked,
   activeUnitId,
   isCompletionTrackingEnabled,
 }) => {
-  const intl = useIntl();
-  const {
-    complete,
-    title,
-    icon = UNIT_ICON_TYPES.other,
-  } = unit;
-
-  const iconType = isLocked ? UNIT_ICON_TYPES.lock : icon;
+  const { complete, title } = unit;
   const completeAndEnabled = complete && isCompletionTrackingEnabled;
 
+  const icon = () => {
+    if (isLocked) { return <LockIcon />; }
+    if (completeAndEnabled) { return <CheckMark />; }
+    if (isActive) { return <OrangeDot />; }
+    return <GreyCircle />;
+  };
+
   return (
-    <li className={classNames({ 'bg-info-100': isActive, 'border-top border-light': !isFirst })}>
-      <UnitLinkWrapper
-        {...{
-          sequenceId,
-          activeUnitId,
-          id,
-          courseId,
+    <li style={{
+      borderLeft: isActive ? '3px solid #4f46e5' : '3px solid transparent',
+      background: isActive ? '#f5f6ff' : 'transparent',
+    }}
+    >
+      <UnitLinkWrapper sequenceId={sequenceId} activeUnitId={activeUnitId} id={id} courseId={courseId}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.4rem 0.75rem',
+          width: '100%',
         }}
-      >
-        <div className="col-auto p-0">
-          <UnitIcon type={iconType} isCompleted={completeAndEnabled} />
-        </div>
-        <div className="col-10 p-0 ml-3 text-break">
-          <span className="align-middle">
+        >
+          <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', width: 16 }}>
+            {icon()}
+          </span>
+          <span style={{
+            fontSize: '0.79rem',
+            color: isActive ? '#4f46e5' : isLocked ? '#9ca3af' : '#374151',
+            fontWeight: isActive ? 600 : 400,
+            lineHeight: 1.4,
+            fontFamily: "'DM Sans', -apple-system, sans-serif",
+          }}
+          >
             {title}
           </span>
-          {isCompletionTrackingEnabled && (
-            <span className="sr-only">
-              , {intl.formatMessage(complete ? messages.completedUnit : messages.incompleteUnit)}
-            </span>
-          )}
         </div>
       </UnitLinkWrapper>
     </li>
@@ -57,13 +84,9 @@ const SidebarUnit = ({
 
 SidebarUnit.propTypes = {
   id: PropTypes.string.isRequired,
-  isFirst: PropTypes.bool.isRequired,
   unit: PropTypes.shape({
     complete: PropTypes.bool,
-    icon: PropTypes.string,
-    id: PropTypes.string,
     title: PropTypes.string,
-    type: PropTypes.string,
   }).isRequired,
   isActive: PropTypes.bool.isRequired,
   isLocked: PropTypes.bool.isRequired,
