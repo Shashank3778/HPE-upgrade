@@ -3,70 +3,55 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button } from '@openedx/paragon';
 import { CourseOutlineTabNotificationsSlot } from '../../plugin-slots/CourseOutlineTabNotificationsSlot';
 import { AlertList } from '../../generic/user-messages';
 
-import CourseDates from './widgets/CourseDates';
-import CourseHandouts from './widgets/CourseHandouts';
-import StartOrResumeCourseCard from './widgets/StartOrResumeCourseCard';
-import WeeklyLearningGoalCard from './widgets/WeeklyLearningGoalCard';
-import CourseTools from './widgets/CourseTools';
-import { fetchOutlineTab } from '../data';
-import messages from './messages';
-import ShiftDatesAlert from '../suggested-schedule-messaging/ShiftDatesAlert';
-import UpgradeToShiftDatesAlert from '../suggested-schedule-messaging/UpgradeToShiftDatesAlert';
+import CourseHeader from './widgets/CourseHeader';
 import useCertificateAvailableAlert from './alerts/certificate-status-alert';
 import useCourseEndAlert from './alerts/course-end-alert';
 import useCourseStartAlert from '../../alerts/course-start-alert';
 import usePrivateCourseAlert from './alerts/private-course-alert';
 import useScheduledContentAlert from './alerts/scheduled-content-alert';
 import { useModel } from '../../generic/model-store';
-import WelcomeMessage from './widgets/WelcomeMessage';
-import ProctoringInfoPanel from './widgets/ProctoringInfoPanel';
 import AccountActivationAlert from '../../alerts/logistration-alert/AccountActivationAlert';
 import CourseHomeSectionOutlineSlot from '../../plugin-slots/CourseHomeSectionOutlineSlot';
+import ShiftDatesAlert from '../suggested-schedule-messaging/ShiftDatesAlert';
+import UpgradeToShiftDatesAlert from '../suggested-schedule-messaging/UpgradeToShiftDatesAlert';
+import { fetchOutlineTab } from '../data';
+import './outline-tab.scss';
+
+const TABS = ['Outline', 'Progress', 'Dates', 'Discussion', 'Notes', 'Bookmarks'];
 
 const OutlineTab = () => {
-  const intl = useIntl();
   const {
     courseId,
-    proctoringPanelStatus,
   } = useSelector(state => state.courseHome);
 
   const {
     isSelfPaced,
     org,
-    title,
   } = useModel('courseHomeMeta', courseId);
 
-  const expandButtonRef = useRef();
+  const [activeTab, setActiveTab] = useState('Outline');
 
   const {
     courseBlocks: {
       courses,
       sections,
-    },
-    courseGoals: {
-      selectedGoal,
-      weeklyLearningGoalEnabled,
     } = {},
     datesWidget: {
       courseDateBlocks,
-    },
-    enableProctoredExams,
-  } = useModel('outline', courseId);
+    } = {},
+  } = useModel('outline', courseId) || {};
 
-  const [expandAll, setExpandAll] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const eventProperties = {
     org_key: org,
     courserun_key: courseId,
   };
 
-  // Below the course title alerts (appearing in the order listed here)
   const courseStartAlert = useCourseStartAlert(courseId);
   const courseEndAlert = useCourseEndAlert(courseId);
   const certificateAvailableAlert = useCertificateAvailableAlert(courseId);
@@ -90,23 +75,16 @@ const OutlineTab = () => {
   const isEnterpriseUser = () => {
     const authenticatedUser = getAuthenticatedUser();
     const userRoleNames = authenticatedUser ? authenticatedUser.roles.map(role => role.split(':')[0]) : [];
-
     return userRoleNames.includes('enterprise_learner');
   };
 
-  /** show post enrolment survey to only B2C learners */
   const learnerType = isEnterpriseUser() ? 'enterprise_learner' : 'b2c_learner';
-
-  const location = useLocation();
 
   useEffect(() => {
     const currentParams = new URLSearchParams(location.search);
     const startCourse = currentParams.get('start_course');
     if (startCourse === '1') {
       sendTrackEvent('enrollment.email.clicked.startcourse', {});
-
-      // Deleting the course_start query param as it only needs to be set once
-      // whenever passed in query params.
       currentParams.delete('start_course');
       navigate({
         pathname: location.pathname,
@@ -117,77 +95,58 @@ const OutlineTab = () => {
   }, [location.search]);
 
   return (
-    <>
-      <div data-learner-type={learnerType} className="row w-100 mx-0 my-3 justify-content-between">
-        <div className="col-12 col-sm-auto p-0">
-          <div role="heading" aria-level="1" className="h2">{title}</div>
-        </div>
-      </div>
-      <div className="row course-outline-tab">
+    <div className="outline-redesign" data-learner-type={learnerType}>
+      {/* Course Header with progress */}
+      <CourseHeader />
+
+      {/* Tab navigation */}
+      <nav className="outline-tab-nav" aria-label="Course tabs">
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            type="button"
+            className={`outline-tab-nav-link${activeTab === tab ? ' active' : ''}`}
+            onClick={() => setActiveTab(tab)}
+            aria-current={activeTab === tab ? 'page' : undefined}
+          >
+            {tab}
+          </button>
+        ))}
+      </nav>
+
+      {/* Alerts */}
+      <div className="outline-body">
         <AccountActivationAlert />
-        <div className="col-12">
-          <AlertList
-            topic="outline-private-alerts"
-            customAlerts={{
-              ...privateCourseAlert,
-            }}
-          />
-        </div>
-        <div className="col col-12 col-md-8">
-          <AlertList
-            topic="outline-course-alerts"
-            className="mb-3"
-            customAlerts={{
-              ...certificateAvailableAlert,
-              ...courseEndAlert,
-              ...courseStartAlert,
-              ...scheduledContentAlert,
-            }}
-          />
-          {isSelfPaced && hasDeadlines && (
-            <>
-              <ShiftDatesAlert model="outline" fetch={fetchOutlineTab} />
-              <UpgradeToShiftDatesAlert model="outline" logUpgradeLinkClick={logUpgradeToShiftDatesLinkClick} />
-            </>
-          )}
-          <StartOrResumeCourseCard />
-          <WelcomeMessage courseId={courseId} nextElementRef={expandButtonRef} />
-          {rootCourseId && (
-            <>
-              <div id="expand-button-row" className="row w-100 m-0 mb-3 justify-content-end">
-                <div className="col-12 col-md-auto p-0">
-                  <Button ref={expandButtonRef} variant="outline-primary" block onClick={() => { setExpandAll(!expandAll); }}>
-                    {expandAll ? intl.formatMessage(messages.collapseAll) : intl.formatMessage(messages.expandAll)}
-                  </Button>
-                </div>
-              </div>
-              <CourseHomeSectionOutlineSlot
-                expandAll={expandAll}
-                sectionIds={courses[rootCourseId].sectionIds}
-                sections={sections}
-              />
-            </>
-          )}
-        </div>
-        {rootCourseId && (
-          <div className="col col-12 col-md-4">
-            <ProctoringInfoPanel />
-            { /** Defer showing the goal widget until the ProctoringInfoPanel has resolved or has been determined as
-             disabled to avoid components bouncing around too much as screen is rendered */ }
-            {(!enableProctoredExams || proctoringPanelStatus === 'loaded') && weeklyLearningGoalEnabled && (
-              <WeeklyLearningGoalCard
-                daysPerWeek={selectedGoal && 'daysPerWeek' in selectedGoal ? selectedGoal.daysPerWeek : null}
-                subscribedToReminders={selectedGoal && 'subscribedToReminders' in selectedGoal ? selectedGoal.subscribedToReminders : false}
-              />
-            )}
-            <CourseTools />
-            <CourseOutlineTabNotificationsSlot courseId={courseId} />
-            <CourseDates />
-            <CourseHandouts />
-          </div>
+        <AlertList topic="outline-private-alerts" customAlerts={{ ...privateCourseAlert }} />
+        <AlertList
+          topic="outline-course-alerts"
+          className="mb-3"
+          customAlerts={{
+            ...certificateAvailableAlert,
+            ...courseEndAlert,
+            ...courseStartAlert,
+            ...scheduledContentAlert,
+          }}
+        />
+        {isSelfPaced && hasDeadlines && (
+          <>
+            <ShiftDatesAlert model="outline" fetch={fetchOutlineTab} />
+            <UpgradeToShiftDatesAlert model="outline" logUpgradeLinkClick={logUpgradeToShiftDatesLinkClick} />
+          </>
         )}
+
+        {/* Outline sections */}
+        {rootCourseId && (
+          <CourseHomeSectionOutlineSlot
+            expandAll={false}
+            sectionIds={courses[rootCourseId].sectionIds}
+            sections={sections}
+          />
+        )}
+
+        <CourseOutlineTabNotificationsSlot courseId={courseId} />
       </div>
-    </>
+    </div>
   );
 };
 

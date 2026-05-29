@@ -1,0 +1,426 @@
+/* ============================================================
+   Course Outline Redesign — Pixel-faithful to design mockup
+   ============================================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+:root {
+  --outline-bg: #f5f6f8;
+  --card-bg: #ffffff;
+  --border: #e8e9ec;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --accent-blue: #4f46e5;
+  --accent-blue-light: #eef2ff;
+  --success-green: #16a34a;
+  --success-bg: #dcfce7;
+  --orange-active: #f59e0b;
+  --orange-bg: #fef3c7;
+  --locked-color: #f97316;
+  --locked-bg: #fff7ed;
+  --progress-track: #e5e7eb;
+  --font-main: 'DM Sans', -apple-system, sans-serif;
+}
+
+/* ── Scoped wrapper ───────────────────────────────────────── */
+.outline-redesign {
+  font-family: var(--font-main);
+  background: var(--outline-bg);
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+/* ── Course Header Banner ─────────────────────────────────── */
+.course-header-banner {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.course-header-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.course-header-title {
+  font-family: var(--font-main);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.course-header-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.85rem;
+  max-width: 620px;
+  line-height: 1.5;
+}
+
+.course-header-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.course-header-meta strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.meta-dot {
+  color: var(--text-muted);
+  margin: 0 0.2rem;
+}
+
+.instructor-name {
+  color: var(--accent-blue);
+}
+
+/* ── Progress Panel (right side of header) ─────────────────── */
+.course-header-right {
+  flex: 0 0 auto;
+  min-width: 220px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.progress-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.progress-pct {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.progress-sign {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.progress-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.progress-bar-track {
+  height: 6px;
+  background: var(--progress-track);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resume-btn {
+  display: inline-block;
+  background: var(--accent-blue);
+  color: #ffffff !important;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  text-decoration: none !important;
+  text-align: center;
+  transition: background 0.15s ease, transform 0.1s ease;
+  letter-spacing: 0.01em;
+
+  &:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ── Outline Tab Navigation ───────────────────────────────── */
+.outline-tab-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem;
+  display: flex;
+  gap: 0;
+}
+
+.outline-tab-nav-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid transparent;
+  text-decoration: none !important;
+  transition: color 0.15s, border-color 0.15s;
+  cursor: pointer;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    color: var(--accent-blue);
+    border-bottom-color: var(--accent-blue);
+    font-weight: 600;
+  }
+}
+
+/* ── Outline Body ─────────────────────────────────────────── */
+.outline-body {
+  padding: 1.5rem 2.5rem;
+}
+
+/* ── Section Card ─────────────────────────────────────────── */
+.section-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+
+  &.section-locked {
+    background: #fafafa;
+    opacity: 0.85;
+  }
+}
+
+/* Section Header Row */
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  gap: 0.75rem;
+  border-bottom: 1px solid transparent;
+  transition: background 0.1s;
+
+  &:hover {
+    background: #f9fafb;
+  }
+
+  &.open {
+    border-bottom-color: var(--border);
+  }
+}
+
+.section-toggle-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+
+  &.rotated {
+    transform: rotate(90deg);
+  }
+}
+
+.section-title-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.section-meta-row {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.section-meta-dot {
+  color: #d1d5db;
+}
+
+/* Section right side: progress + badge */
+.section-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.section-progress-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.mini-bar-track {
+  width: 60px;
+  height: 4px;
+  background: var(--progress-track);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+
+  &.complete { background: var(--success-green); }
+  &.active   { background: var(--accent-blue); }
+  &.locked   { background: #d1d5db; }
+}
+
+/* Status badges */
+.section-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.22rem 0.6rem;
+  border-radius: 99px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &.complete {
+    background: var(--success-bg);
+    color: var(--success-green);
+  }
+  &.active {
+    background: var(--accent-blue-light);
+    color: var(--accent-blue);
+  }
+  &.locked {
+    background: var(--locked-bg);
+    color: var(--locked-color);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}
+
+/* ── Sequence (subsection) rows ───────────────────────────── */
+.sequence-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sequence-row {
+  display: flex;
+  align-items: center;
+  padding: 0.7rem 1.2rem 0.7rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.75rem;
+  transition: background 0.1s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover:not(.seq-locked) {
+    background: #f9fafb;
+  }
+}
+
+.seq-icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.done {
+    background: var(--success-green);
+    color: #fff;
+  }
+  &.in-progress {
+    background: var(--orange-active);
+    color: #fff;
+  }
+  &.pending {
+    border: 2px solid #d1d5db;
+    background: transparent;
+  }
+}
+
+.seq-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.seq-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.1rem;
+
+  a {
+    color: var(--text-primary);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--accent-blue);
+      text-decoration: underline;
+    }
+  }
+}
+
+.seq-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.seq-number {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+  min-width: 24px;
+  text-align: right;
+}
+
+/* Locked section dim overlay */
+.seq-locked .seq-title { color: var(--text-muted); }
+.seq-locked .seq-title a { pointer-events: none; color: var(--text-muted); }
