@@ -6,7 +6,6 @@ import { Navigate } from 'react-router-dom';
 
 import { Toast } from '@openedx/paragon';
 import { FooterSlot } from '@edx/frontend-component-footer';
-import HeaderSlot from '../plugin-slots/HeaderSlot';
 import PageLoading from '../generic/PageLoading';
 import { getAccessDeniedRedirectUrl } from '../shared/access';
 import { useModel } from '../generic/model-store';
@@ -16,6 +15,7 @@ import messages from './messages';
 import LoadedTabPage from './LoadedTabPage';
 import { setCallToActionToast } from '../course-home/data/slice';
 import LaunchCourseHomeTourButton from '../product-tours/newUserCourseHomeTour/LaunchCourseHomeTourButton';
+import AppLayout from '../custom-header/AppLayout';
 
 const TabPage = (props) => {
   const intl = useIntl();
@@ -25,17 +25,21 @@ const TabPage = (props) => {
     courseStatus,
     metadataModel,
   } = props;
+
   const {
     toastBodyLink,
     toastBodyText,
     toastHeader,
     errorMessage: courseHomeErrorMessage,
   } = useSelector(state => state.courseHome);
+
   const {
     errorMessage: coursewareErrorMessage,
   } = useSelector(state => state.courseware);
+
   const errorMessage = courseHomeErrorMessage || coursewareErrorMessage;
   const dispatch = useDispatch();
+
   const {
     courseAccess,
     number,
@@ -52,7 +56,7 @@ const TabPage = (props) => {
   }
 
   return (
-    <>
+    <AppLayout courseTitle={title}>
       {['loaded', 'denied'].includes(courseStatus) && (
         <>
           <Toast
@@ -70,8 +74,6 @@ const TabPage = (props) => {
         </>
       )}
 
-      <HeaderSlot courseOrg={org} courseNumber={number} courseTitle={title} />
-
       {courseStatus === 'loading' && (
         <PageLoading srMessage={intl.formatMessage(messages.loading)} />
       )}
@@ -80,14 +82,14 @@ const TabPage = (props) => {
         <LoadedTabPage {...props} />
       )}
 
-      {/* courseStatus 'failed' and any other unexpected course status. */}
       {(!['loading', 'loaded', 'denied'].includes(courseStatus)) && (
         <p className="text-center py-5 mx-auto" style={{ maxWidth: '30em' }}>
           {errorMessage || intl.formatMessage(messages.failure)}
         </p>
       )}
+
       <FooterSlot />
-    </>
+    </AppLayout>
   );
 };
 
