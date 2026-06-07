@@ -74,7 +74,7 @@ const LoadedTabPage = ({
       <main className="d-flex flex-column flex-grow-1">
         <AlertList
           topic="outline"
-          className="mx-5 mt-3"
+          className="mt-3"
           customAlerts={{
             ...enrollmentAlert,
             ...logistrationAlert,
@@ -83,7 +83,7 @@ const LoadedTabPage = ({
         {activeTabSlug !== 'outline' && (
           <CourseTabsNavigation tabs={tabs} className="mb-3" activeTabSlug={activeTabSlug} />
         )}
-        <div id="main-content" className="container-xl">
+        <div id="main-content" style={{ width: '100%', maxWidth: '100%', padding: 0 }}>
           {children}
         </div>
       </main>
