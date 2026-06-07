@@ -376,11 +376,6 @@ body {
 
 .sequence-container {
   width: 100% !important;
-}
-
-/* Remove any bootstrap container centering */
-.container-xl {
-  max-width: 100% !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
 }
