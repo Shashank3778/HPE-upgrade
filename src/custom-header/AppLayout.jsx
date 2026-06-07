@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 import { useLocation } from 'react-router-dom';
+import hpeLogo from './assets/hpe-logo-white.png';
 import './custom-header.scss';
 
 /* ── Icons ──────────────────────────────────────────────── */
@@ -79,7 +80,7 @@ const AppLayout = ({ courseTitle, children }) => {
 
   const lmsBase = config?.LMS_BASE_URL || '';
   const dashboardUrl = `${lmsBase}/dashboard`;
-  const catalogUrl = `${lmsBase}/courses`;
+  const catalogUrl = 'https://apps.stage.test.striverra.com/learner-dashboard/catalog';
   const discussionsUrl = `${lmsBase}/discuss`;
   const certificatesUrl = `${lmsBase}/certificates`;
   const profileUrl = config?.ACCOUNT_PROFILE_URL || `${lmsBase}/u/${user?.username}`;
@@ -106,7 +107,7 @@ const AppLayout = ({ courseTitle, children }) => {
       <aside className="ch-sidebar">
         <div className="ch-logo">
           <a href={dashboardUrl}>
-            <span className="ch-logo-text">HP<span className="ch-logo-accent">E</span></span>
+            <img src={hpeLogo} alt="HPE" className="ch-logo-img" />
           </a>
         </div>
 
