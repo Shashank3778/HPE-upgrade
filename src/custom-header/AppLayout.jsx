@@ -104,7 +104,7 @@ const AppLayout = ({ courseTitle, children }) => {
   return (
     <div className="ch-layout">
       {/* Sidebar */}
-      <aside className="ch-sidebar">
+      <aside className="hpe-nav-sidebar">
         <div className="ch-logo">
           <a href={dashboardUrl}>
             <img src={hpeLogo} alt="HPE" className="ch-logo-img" />
