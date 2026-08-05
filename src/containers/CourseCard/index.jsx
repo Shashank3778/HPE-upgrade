@@ -26,7 +26,6 @@ export const CourseCard = ({ cardId }) => (
             <CourseCardDetails cardId={cardId} />
           </Card.Section>
           <Card.Footer orientation="vertical">
-            <CourseCardActions cardId={cardId} />
           </Card.Footer>
         </Card.Body>
         <CourseCardBanners cardId={cardId} />

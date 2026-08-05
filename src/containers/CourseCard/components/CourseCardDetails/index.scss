@@ -1,5 +1,13 @@
 a.course-card-title {
-  color: var(--pgn-color-black);
+      font-size: 13px;
+    font-weight: 600;
+    color: var(--n100);
+    line-height: 1.35;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .course-card-details {
