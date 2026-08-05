@@ -1,27 +1,29 @@
 /* ============================================================
-   Course Outline Redesign — Pixel-faithful to design mockup
+   Course Outline — Striverra Open edX App Design System
+   Tokens verbatim from striverra-openedx-app-design-system.html
    ============================================================ */
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
-
 :root {
-  --outline-bg: #f5f6f8;
-  --card-bg: #ffffff;
-  --border: #e8e9ec;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-  --accent-blue: #4f46e5;
-  --accent-blue-light: #eef2ff;
-  --success-green: #16a34a;
-  --success-bg: #dcfce7;
-  --orange-active: #f59e0b;
-  --orange-bg: #fef3c7;
-  --locked-color: #f97316;
-  --locked-bg: #fff7ed;
-  --progress-track: #e5e7eb;
-  --font-main: 'DM Sans', -apple-system, sans-serif;
+  --outline-bg: #F4F7F9;
+  --card-bg: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.10);
+  --divider: #EDF1F3;
+  --text-primary: #012232;
+  --text-secondary: #4D6470;
+  --text-muted: #98A5AC;
+  /* "Active/current" is the primary ramp, not an orange accent */
+  --accent-blue: #5F6AFF;
+  --accent-blue-hover: #6F79FF;
+  --accent-blue-active: #4750E0;
+  --accent-blue-light: #EFF0FF;
+  --success-green: #36C365;
+  --success-bg: #E5F7EB;
+  --success-text: #1E7A3C;
+  /* "Locked" is neutral, not a warning/orange accent */
+  --locked-color: #4D6470;
+  --locked-bg: #F2F4F5;
+  --progress-track: #F2F4F5;
+  --font-main: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
 }
 
 /* ── Scoped wrapper ───────────────────────────────────────── */
@@ -51,7 +53,7 @@
 .course-header-title {
   font-family: var(--font-main);
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 0.45rem;
   letter-spacing: -0.02em;
@@ -109,7 +111,7 @@
 
 .progress-pct {
   font-size: 2.6rem;
-  font-weight: 800;
+  font-weight: 400;
   color: var(--text-primary);
   line-height: 1;
   letter-spacing: -0.03em;
@@ -148,19 +150,18 @@
   font-size: 0.82rem;
   font-weight: 600;
   padding: 0.55rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 4px;
   text-decoration: none !important;
   text-align: center;
-  transition: background 0.15s ease, transform 0.1s ease;
-  letter-spacing: 0.01em;
+  transition: background 0.3s ease-in-out;
+  letter-spacing: 0.04em;
 
   &:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
+    background: var(--accent-blue-hover);
   }
 
   &:active {
-    transform: translateY(0);
+    background: var(--accent-blue-active);
   }
 }
 
@@ -207,17 +208,17 @@
 .section-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   margin-bottom: 0.75rem;
   overflow: hidden;
-  transition: box-shadow 0.15s ease;
+  transition: border-color 0.3s ease-in-out;
 
   &:hover {
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    border-color: #9FA6FF;
   }
 
   &.section-locked {
-    background: #fafafa;
+    background: var(--locked-bg);
     opacity: 0.85;
   }
 }
@@ -276,7 +277,7 @@
 }
 
 .section-meta-dot {
-  color: #d1d5db;
+  color: #D9DEE0;
 }
 
 /* Section right side: progress + badge */
@@ -309,25 +310,25 @@
 
   &.complete { background: var(--success-green); }
   &.active   { background: var(--accent-blue); }
-  &.locked   { background: #d1d5db; }
+  &.locked   { background: #D9DEE0; }
 }
 
 /* Status badges */
 .section-badge {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.22rem 0.6rem;
-  border-radius: 99px;
+  border-radius: 4px;
   letter-spacing: 0.04em;
   white-space: nowrap;
 
   &.complete {
     background: var(--success-bg);
-    color: var(--success-green);
+    color: var(--success-text);
   }
   &.active {
     background: var(--accent-blue-light);
-    color: var(--accent-blue);
+    color: var(--accent-blue-active);
   }
   &.locked {
     background: var(--locked-bg);
@@ -358,7 +359,7 @@
   }
 
   &:hover:not(.seq-locked) {
-    background: #f9fafb;
+    background: var(--accent-blue-light);
   }
 }
 
@@ -376,11 +377,11 @@
     color: #fff;
   }
   &.in-progress {
-    background: var(--orange-active);
+    background: var(--accent-blue);
     color: #fff;
   }
   &.pending {
-    border: 2px solid #d1d5db;
+    border: 2px solid #D9DEE0;
     background: transparent;
   }
 }

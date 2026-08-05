@@ -42,31 +42,34 @@ const UnitButton = ({
   let iconContent = null;
 
   if (isLocked) {
+    // Locked is neutral/inert, not a warning accent — Striverra design system,
+    // "Locked rows are Neutral 50 and inert."
     circleStyle = {
-      background: '#fff7ed',
-      border: '2px solid #f97316',
-      color: '#f97316',
+      background: '#F2F4F5',
+      border: '2px solid #D9DEE0',
+      color: '#98A5AC',
     };
     iconContent = <LockIcon />;
   } else if (showCompletion && complete) {
     circleStyle = {
-      background: '#16a34a',
-      border: '2px solid #16a34a',
+      background: '#36C365',
+      border: '2px solid #36C365',
       color: '#fff',
     };
     iconContent = <CheckIcon />;
   } else if (isActive) {
+    // "Current" is the primary ramp, not an orange accent.
     circleStyle = {
-      background: '#d97706',
-      border: '2px solid #d97706',
+      background: '#5F6AFF',
+      border: '2px solid #5F6AFF',
       color: '#fff',
     };
     iconContent = null;
   } else {
     circleStyle = {
       background: '#fff',
-      border: '2px solid #d1d5db',
-      color: '#9ca3af',
+      border: '2px solid #D9DEE0',
+      color: '#4D6470',
     };
     iconContent = null;
   }
@@ -93,7 +96,7 @@ const UnitButton = ({
     <span style={{
       fontSize: '0.78rem',
       fontWeight: isActive ? 600 : 400,
-      color: isActive ? '#111827' : '#6b7280',
+      color: isActive ? '#012232' : '#4D6470',
       maxWidth: 80,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
