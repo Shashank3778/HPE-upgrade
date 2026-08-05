@@ -69,6 +69,52 @@
   }
 }
 
+// ── Recent Activity ───────────────────────────────────────────────────────
+.recent-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__text {
+    font-size: 13px;
+    color: #1a1d2e;
+    margin: 0;
+  }
+
+  &__time {
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 2px 0 0;
+  }
+}
+
+.recent-activity__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg { width: 16px; height: 16px; }
+
+  &--cert {
+    background: #fdf0dc;
+    color: #d6923f;
+  }
+
+  &--active {
+    background: #e8e8fd;
+    color: #5b5bd6;
+  }
+}
+
 // ── Certificates Widget ───────────────────────────────────────────────────
 .cert-widget {
   &__header {
@@ -149,172 +195,3 @@
   }
 }
 
-// ── Course Banner ─────────────────────────────────────────────────────────
-.course-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #0d1b2a;
-  border-radius: 12px;
-  padding: 20px 28px;
-  margin: 0 8px 20px;
-  color: #fff;
-  gap: 16px;
-
-  &__left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__initials {
-    width: 64px;
-    height: 64px;
-    border-radius: 10px;
-    background: #5b5bd6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-  }
-
-  &__info {
-    min-width: 0;
-  }
-
-  &__label {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.5);
-    letter-spacing: 0.1em;
-    margin: 0 0 4px;
-  }
-
-  &__name {
-    font-size: 20px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  &__provider {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.55);
-    margin: 0;
-  }
-
-  &__right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  &__btn {
-    background: #f59e0b;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    white-space: nowrap;
-
-    &:hover {
-      background: #d97706;
-      color: #fff;
-      text-decoration: none;
-    }
-  }
-
-  &__deadline {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 0;
-    text-align: right;
-  }
-}
-
-// ── Old certificate styles (kept for safety) ──────────────────────────────
-.certificates-count {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 14px;
-
-  &__number {
-    font-size: 32px;
-    font-weight: 700;
-    color: #5b5bd6;
-  }
-
-  &__label {
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.5);
-  }
-}
-
-.certificates-empty {
-  &__msg {
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.45);
-    margin: 0;
-  }
-}
-
-.certificate-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  &__icon {
-    width: 32px;
-    height: 32px;
-    background: #e8e8fd;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  &__info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1a1d2e;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  &__provider {
-    font-size: 11px;
-    color: rgba(0, 0, 0, 0.4);
-    margin: 0;
-  }
-
-  &__link {
-    font-size: 12px;
-    font-weight: 600;
-    color: #5b5bd6;
-    text-decoration: none;
-    white-space: nowrap;
-
-    &:hover { text-decoration: underline; }
-  }
-}

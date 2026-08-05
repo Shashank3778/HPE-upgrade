@@ -11,6 +11,7 @@ import { useFilters } from 'data/context';
 
 import { getVisibleList, getTransformedCourseDataList } from 'utils/dataTransformers';
 
+import BrowseCatalogCard from './BrowseCatalogCard';
 import messages from './messages';
 
 import './index.scss';
@@ -65,6 +66,7 @@ export const CoursesPanel = () => {
         </div>
       </div>
       {hasCourses ? <CourseListSlot courseListData={courseListData} /> : <NoCoursesViewSlot />}
+      {hasCourses && <BrowseCatalogCard />}
     </div>
   );
 };

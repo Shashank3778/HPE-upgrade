@@ -64,3 +64,67 @@
     grid-template-columns: 1fr;
   }
 }
+
+// ── Browse catalog CTA ────────────────────────────────────────────────────
+.browse-catalog-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f4f5ff;
+  border: 1px solid #e2e4e9;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #5b5bd6;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1d2e;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 13px;
+    color: rgba(26, 29, 46, 0.55);
+    margin: 0;
+  }
+
+  &__btn {
+    background: #5b5bd6;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #4a4ac2;
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+}

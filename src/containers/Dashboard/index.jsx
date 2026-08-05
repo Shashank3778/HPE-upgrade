@@ -6,6 +6,8 @@ import { useInitializeLearnerHome } from 'data/hooks';
 import SelectSessionModal from 'containers/SelectSessionModal';
 import CoursesPanel from 'containers/CoursesPanel';
 import DashboardModalSlot from 'plugin-slots/DashboardModalSlot';
+import useCourseProgress from 'hooks/useCourseProgress';
+import { getCourseInitials } from 'utils/courseVisuals';
 
 import LoadingView from './LoadingView';
 import DashboardLayout from './DashboardLayout';
@@ -17,12 +19,6 @@ const getGreeting = () => {
   if (hour < 12) { return 'Good morning'; }
   if (hour < 17) { return 'Good afternoon'; }
   return 'Good evening';
-};
-
-const getCourseInitials = (name = '') => {
-  const words = name.trim().split(' ').filter(Boolean);
-  if (words.length === 1) { return words[0].substring(0, 2).toUpperCase(); }
-  return (words[0][0] + words[1][0]).toUpperCase();
 };
 
 // Format "last seen X ago"
@@ -55,12 +51,16 @@ const CourseBanner = ({ courses }) => {
     return enrolled[0];
   }, [courses]);
 
+  const courseId = featured?.courseRun?.courseId;
+  const { percentComplete, isLoading: isProgressLoading } = useCourseProgress(courseId);
+
   if (!featured) { return null; }
 
   const courseName = featured.course?.courseName || '';
   const resumeUrl = featured.courseRun?.resumeUrl || featured.courseRun?.homeUrl || '#';
   const lastSeen = getLastSeen(featured.enrollment?.lastEnrolled);
   const daysLeft = getDaysLeft(featured.courseRun?.endDate);
+  const showProgress = courseId && !isProgressLoading;
 
   return (
     <div className="course-banner">
@@ -72,6 +72,17 @@ const CourseBanner = ({ courses }) => {
           <p className="course-banner__label">CONTINUE WHERE YOU LEFT OFF</p>
           <h3 className="course-banner__name">{courseName}</h3>
           <p className="course-banner__provider">{featured.courseProvider?.name}</p>
+          {showProgress && (
+            <div className="course-banner__progress-row">
+              <div className="course-banner__progress-track">
+                <div
+                  className="course-banner__progress-fill"
+                  style={{ width: `${percentComplete}%` }}
+                />
+              </div>
+              <span className="course-banner__progress-pct">{percentComplete}%</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="course-banner__right">

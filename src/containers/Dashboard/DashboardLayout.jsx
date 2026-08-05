@@ -5,6 +5,7 @@ import { Container, Col, Row } from '@openedx/paragon';
 
 import WidgetSidebarSlot from 'plugin-slots/WidgetSidebarSlot';
 import UpcomingDeadlines from './UpcomingDeadlines';
+import RecentActivity from './RecentActivity';
 import CertificatesWidget from './CertificatesWidget';
 import './widgets.scss';
 import hooks from './hooks';
@@ -45,6 +46,7 @@ export const DashboardLayout = ({ children }) => {
         <Col {...columnConfig.sidebar} className={['sidebar-column', !isCollapsed && 'not-collapsed']}>
           {/* Our custom widgets */}
           <UpcomingDeadlines />
+          <RecentActivity />
           <CertificatesWidget />
           {/* Original plugin sidebar slot */}
           <WidgetSidebarSlot />

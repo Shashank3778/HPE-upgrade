@@ -32,6 +32,16 @@
       border-bottom-right-radius: 0 !important;
     }
 
+    .course-card-initials-tile {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
     // Card body takes remaining space
     .pgn__card-body {
       display: flex;
