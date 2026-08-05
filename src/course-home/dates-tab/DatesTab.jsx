@@ -44,7 +44,16 @@ const DatesTab = () => {
 
   return (
     <>
-      <div role="heading" aria-level="1" className="h2 my-3">
+      <div
+        role="heading"
+        aria-level="1"
+        className="h2 my-3"
+        style={{
+          color: '#012232',
+          fontWeight: 600,
+          fontFamily: '"Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif',
+        }}
+      >
         {intl.formatMessage(messages.title)}
       </div>
       {isSelfPaced && hasDeadlines && (

@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
-
+// Striverra Open edX App Design System tokens. No mockup exists for this
+// component — the nav-rail navy (--srv-rail) is reused here as the one other
+// sanctioned dark surface, rather than inventing a third dark tone.
 [data-testid="instructor-toolbar"] {
-  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-family: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
 
   // Main toolbar bar
   .bg-primary {
-    background-color: #1e2d5a !important;
+    background-color: #1A2A44 !important;
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
 
@@ -25,17 +26,17 @@
 
   // Studio / Insights buttons
   .btn-inverse-outline-primary {
-    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-family: inherit;
     font-size: 0.82rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
     color: #ffffff;
     border: 1.5px solid rgba(255,255,255,0.5);
-    border-radius: 7px;
+    border-radius: 4px;
     padding: 0.35rem 1rem;
     background: transparent;
-    letter-spacing: 0.01em;
     text-decoration: none;
-    transition: border-color 0.15s, background 0.15s;
+    transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
 
     &:hover {
       border-color: #ffffff;

@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { Badge } from '@openedx/paragon';
@@ -33,47 +32,47 @@ function getBadgeListAndColor(date, intl, item, items) {
 
   // This badge info list is in order of priority (they will appear left to right in this order and the first badge
   // sets the color of the dot in the timeline).
+  // Colors are literal Striverra design-system tokens (badge fill/text pairs are
+  // chosen to clear 4.5:1, per the system's own accessibility notes), not Bootstrap
+  // utility classes — those resolve through the stock Paragon brand, not Striverra's.
   const badgesInfo = [
     {
       message: messages.today,
       shownForDay: isToday,
-      bg: 'bg-warning-300',
-      className: 'text-dark',
+      style: { background: '#EFF0FF', color: '#4750E0' },
     },
     {
       message: messages.completed,
       shownForDay: assignments.length && assignments.every(isComplete),
       shownForItem: x => isLearnerAssignment(x) && isComplete(x),
-      bg: 'bg-light-500',
-      className: 'text-dark',
+      style: { background: '#E5F7EB', color: '#1E7A3C' },
     },
     {
       message: messages.pastDue,
       shownForDay: assignments.length && assignments.every(isPastDue),
       shownForItem: x => isLearnerAssignment(x) && isPastDue(x),
-      bg: 'bg-dark-200',
-      className: 'text-dark',
+      style: { background: '#FFF5EB', color: '#9C4607' },
     },
     {
       message: messages.dueNext,
       shownForDay: !isToday && assignments.some(x => x.dueNext),
       shownForItem: x => x.dueNext,
-      bg: 'bg-gray-500',
-      className: 'text-white',
+      style: { background: '#F2F4F5', color: '#334C58' },
     },
     {
       message: messages.unreleased,
       shownForDay: assignments.length && assignments.every(isUnreleased),
       shownForItem: x => isLearnerAssignment(x) && isUnreleased(x),
-      className: 'border border-gray-500 text-gray-500',
+      style: {
+        background: 'transparent', color: '#334C58', border: '1px solid #D9DEE0',
+      },
     },
     {
       message: messages.verifiedOnly,
       shownForDay: items.length && items.every(x => !hasAccess(x)),
       shownForItem: x => !hasAccess(x),
       icon: faLock,
-      bg: 'bg-dark-700',
-      className: 'text-white',
+      style: { background: '#757575', color: '#fff' },
     },
   ];
   let color = null; // first color of any badge
@@ -93,10 +92,10 @@ function getBadgeListAndColor(date, intl, item, items) {
         }
 
         if (!color && !isInFuture) {
-          color = b.bg;
+          color = b.style.background;
         }
         return (
-          <Badge key={b.message.id} className={classNames('ml-2', b.bg, b.className)} data-testid="dates-badge">
+          <Badge key={b.message.id} className="ml-2" style={b.style} data-testid="dates-badge">
             {b.icon && <FontAwesomeIcon icon={b.icon} className="mr-1" />}
             {intl.formatMessage(b.message)}
           </Badge>
@@ -105,7 +104,7 @@ function getBadgeListAndColor(date, intl, item, items) {
     </>
   );
   if (!color && isInFuture) {
-    color = 'bg-gray-900';
+    color = '#D9DEE0';
   }
 
   return {

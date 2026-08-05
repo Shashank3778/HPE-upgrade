@@ -4,6 +4,22 @@ $offset: $dot-radius * 1.5;
 
 .dates-day {
   position: relative;
+  font-family: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
+
+  // Override Bootstrap/Paragon utility text colors — those track the stock
+  // Paragon brand, not the Striverra ink/muted tokens this app is themed with.
+  .text-primary-700 {
+    color: #012232 !important;
+  }
+
+  .text-gray-500,
+  .text-gray-700 {
+    color: #4D6470 !important;
+  }
+
+  a.text-reset:hover {
+    color: #5F6AFF !important;
+  }
 }
 
 .dates-line-top {
@@ -13,12 +29,15 @@ $offset: $dot-radius * 1.5;
   top: 0;
   height: $offset;
   z-index: 0;
+  border-left-width: 1px !important;
+  border-left-color: #D9DEE0 !important;
 }
 
 .dates-dot {
   display: inline-block;
   position: absolute;
   border-radius: 50%;
+  border: 2px solid;
   left: $dot-radius * 0.5; // save room for today's larger size
   top: $offset;
   height: $dot-size;
@@ -40,8 +59,6 @@ $offset: $dot-radius * 1.5;
   bottom: 0;
   left: $offset;
   z-index: 0;
-}
-
-.dates-bg-today {
-  background: #ffdb87;
+  border-left-width: 1px !important;
+  border-left-color: #D9DEE0 !important;
 }

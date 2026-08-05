@@ -37,13 +37,13 @@ const Day = ({
   return (
     <li className="dates-day pb-4" data-testid="dates-day">
       {/* Top Line */}
-      {!first && <div className="dates-line-top border-1 border-left border-gray-900 bg-gray-900" />}
+      {!first && <div className="dates-line-top border-1 border-left" />}
 
       {/* Dot */}
-      <div className={classNames(color, 'dates-dot border border-gray-900')} />
+      <div className="dates-dot" style={{ background: color, borderColor: color }} />
 
       {/* Bottom Line */}
-      {!last && <div className="dates-line-bottom border-1 border-left border-gray-900 bg-gray-900" />}
+      {!last && <div className="dates-line-bottom border-1 border-left" />}
 
       {/* Content */}
       <div className="d-inline-block ml-3 pl-2">
