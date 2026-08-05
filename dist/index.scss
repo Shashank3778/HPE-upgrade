@@ -300,7 +300,9 @@
 }
 
 // ── PUSH PAGE CONTENT RIGHT ───────────────────────────────────────────────
-body {
+// Scoped to body.has-site-sidebar (set by DesktopHeader when it mounts the
+// sidebar) so apps using a different header, like Studio, aren't affected.
+body.has-site-sidebar {
   padding-left: 200px !important;
 }
 #root header.site-header-desktop .menu button {

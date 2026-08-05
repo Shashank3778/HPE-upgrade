@@ -119,6 +119,15 @@ var DesktopHeader = function DesktopHeader(_ref) {
     };
   }, []);
 
+  // Only push page content over when this sidebar is actually mounted (LMS),
+  // so apps that render a different header (e.g. Studio) are unaffected.
+  useEffect(function () {
+    document.body.classList.add('has-site-sidebar');
+    return function () {
+      return document.body.classList.remove('has-site-sidebar');
+    };
+  }, []);
+
   // Get current page name from URL
   var pageName = 'Dashboard';
   try {
