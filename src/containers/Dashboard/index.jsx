@@ -7,7 +7,7 @@ import SelectSessionModal from 'containers/SelectSessionModal';
 import CoursesPanel from 'containers/CoursesPanel';
 import DashboardModalSlot from 'plugin-slots/DashboardModalSlot';
 import useCourseProgress from 'hooks/useCourseProgress';
-import { getCourseInitials } from 'utils/courseVisuals';
+import { getCourseInitials, getCourseTint } from 'utils/courseVisuals';
 
 import LoadingView from './LoadingView';
 import DashboardLayout from './DashboardLayout';
@@ -65,7 +65,7 @@ const CourseBanner = ({ courses }) => {
   return (
     <div className="course-banner">
       <div className="course-banner__left">
-        <div className="course-banner__initials">
+        <div className="course-banner__initials" style={{ background: getCourseTint(courseId || courseName) }}>
           {getCourseInitials(courseName)}
         </div>
         <div className="course-banner__info">

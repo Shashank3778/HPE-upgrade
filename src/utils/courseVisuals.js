@@ -1,11 +1,8 @@
-// Shared visual treatment for courses that don't have (or shouldn't show) a photo banner:
-// a deterministic pastel tile with the course's initials.
-const PALETTES = [
-  { bg: '#f0ecfc', text: '#8b7fd6' },
-  { bg: '#e6f2fb', text: '#4a90c4' },
-  { bg: '#e6f7f0', text: '#3ba17e' },
-  { bg: '#fdf3e6', text: '#d6923f' },
-];
+// Course card thumbnail tint, per the Striverra design system's card-accent tints
+// (striverra-openedx-app-design-system.html #coursecards): "Tint rotation: lilac,
+// teal, peach, blue, olive, sage, rose" — never the primary ramp, or every tile
+// reads as an active state.
+const TINTS = ['#F2F0FF', '#D9F1F1', '#FBF2ED', '#E6F2FF', '#EEF6E5', '#E4F1EE', '#FFECEC'];
 
 export const getCourseInitials = (name = '') => {
   const words = name.trim().split(' ').filter(Boolean);
@@ -22,4 +19,4 @@ const hashString = (str = '') => {
   return hash;
 };
 
-export const getCoursePalette = (seed = '') => PALETTES[hashString(seed) % PALETTES.length];
+export const getCourseTint = (seed = '') => TINTS[hashString(seed) % TINTS.length];

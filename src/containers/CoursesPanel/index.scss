@@ -71,9 +71,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: #f4f5ff;
-  border: 1px solid #e2e4e9;
-  border-radius: 12px;
+  background: #EFF0FF;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: 8px;
   padding: 20px 24px;
   margin-bottom: 16px;
   flex-wrap: wrap;
@@ -88,8 +88,8 @@
   &__icon {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
-    background: #5b5bd6;
+    border-radius: 8px;
+    background: #5F6AFF;
     color: #fff;
     display: flex;
     align-items: center;
@@ -99,32 +99,39 @@
 
   &__title {
     font-size: 15px;
-    font-weight: 700;
-    color: #1a1d2e;
+    font-weight: 600;
+    color: #012232;
     margin: 0;
   }
 
   &__subtitle {
     font-size: 13px;
-    color: rgba(26, 29, 46, 0.55);
+    color: #4D6470;
     margin: 0;
   }
 
   &__btn {
-    background: #5b5bd6;
+    background: #5F6AFF;
     color: #fff;
     font-size: 14px;
     font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 8px;
+    letter-spacing: 0.04em;
+    line-height: 20px;
+    padding: 7px 12px;
+    border-radius: 4px;
     text-decoration: none;
     white-space: nowrap;
     flex-shrink: 0;
+    transition: background 0.3s ease-in-out;
 
     &:hover {
-      background: #4a4ac2;
+      background: #6F79FF;
       color: #fff;
       text-decoration: none;
+    }
+
+    &:active {
+      background: #4750E0;
     }
   }
 }

@@ -1,10 +1,6 @@
 import React, { useMemo } from 'react';
 import { useInitializeLearnerHome } from 'data/hooks';
-import { getCourseInitials } from 'utils/courseVisuals';
-
-// Color palette for badges
-const BADGE_COLORS = ['#5b5bd6', '#1d9e75', '#e67e22', '#e74c3c', '#8e44ad', '#2980b9'];
-const getBadgeColor = (index) => BADGE_COLORS[index % BADGE_COLORS.length];
+import { getCourseInitials, getCourseTint } from 'utils/courseVisuals';
 
 export const CertificatesWidget = () => {
   const { data } = useInitializeLearnerHome();
@@ -39,7 +35,7 @@ export const CertificatesWidget = () => {
           <div
             key={c.courseRun?.courseId || i}
             className="cert-badge"
-            style={{ background: getBadgeColor(i) }}
+            style={{ background: getCourseTint(c.courseRun?.courseId || c.course?.courseName) }}
             title={c.course?.courseName}
           >
             {getCourseInitials(c.course?.courseName)}

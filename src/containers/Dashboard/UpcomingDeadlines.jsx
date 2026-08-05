@@ -15,20 +15,23 @@ const DeadlineBadge = ({ days }) => {
   let style;
   if (days <= 0) {
     label = 'ENDED';
-    style = { background: '#e53e3e', color: '#fff' };
+    style = { background: '#FFEBEB', color: '#A32D2D' };
   } else if (days <= 7) {
     label = `IN ${days}D`;
-    style = { background: '#f59e0b', color: '#fff' };
+    style = { background: '#FFF5EB', color: '#9C4607' };
   } else {
     label = `${days}D`;
-    style = { background: '#e8e8fd', color: '#5b5bd6' };
+    style = { background: '#F2F4F5', color: '#334C58' };
   }
   return (
     <span style={{
       ...style,
-      fontSize: 11,
-      fontWeight: 700,
-      padding: '2px 7px',
+      display: 'inline-flex',
+      alignItems: 'center',
+      fontSize: 12,
+      fontWeight: 600,
+      lineHeight: '14px',
+      padding: '4px 12px',
       borderRadius: 4,
       whiteSpace: 'nowrap',
     }}

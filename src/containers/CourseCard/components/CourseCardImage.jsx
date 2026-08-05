@@ -7,7 +7,7 @@ import { Badge } from '@openedx/paragon';
 import track from 'tracking';
 import { useCourseData, useCourseTrackingEvent } from 'hooks';
 import verifiedRibbon from 'assets/verified-ribbon.png';
-import { getCourseInitials, getCoursePalette } from 'utils/courseVisuals';
+import { getCourseInitials, getCourseTint } from 'utils/courseVisuals';
 import useActionDisabledState from './hooks';
 
 import messages from '../messages';
@@ -22,16 +22,17 @@ export const CourseCardImage = ({ cardId, orientation }) => {
   const { disableCourseTitle } = useActionDisabledState(cardId);
   const handleImageClicked = useCourseTrackingEvent(courseImageClicked, cardId, homeUrl);
   const wrapperClassName = `pgn__card-wrapper-image-cap d-inline-block overflow-visible ${orientation}`;
-  const palette = getCoursePalette(courseId || courseName);
+  const tint = getCourseTint(courseId || courseName);
   const image = (
     <>
       <div
         className="pgn__card-image-cap course-card-initials-tile w-100 show"
-        style={{ background: palette.bg, color: palette.text }}
+        style={{ background: tint }}
         role="img"
         aria-label={formatMessage(messages.bannerAlt)}
       >
-        {getCourseInitials(courseName)}
+        <span className="course-card-initials-tile__dots" aria-hidden="true" />
+        <span className="course-card-initials-tile__text">{getCourseInitials(courseName)}</span>
       </div>
       {
         courseData?.enrollment?.isVerified && (
