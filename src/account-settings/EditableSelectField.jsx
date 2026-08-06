@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Form, StatefulButton,
 } from '@openedx/paragon';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import SwitchContent from './SwitchContent';
 import messages from './AccountSettingsPage.messages';
@@ -181,17 +180,31 @@ const EditableSelectField = (props) => {
           </>
         ),
         default: (
-          <div className="form-group">
-            <div className="d-flex align-items-start">
-              <h6 aria-level="3">{label}</h6>
+          <div className="account-field-row">
+            <div className="account-field-row__label">
+              <span className="account-field-row__label-text">{label}</span>
+              {!!helpText && !renderConfirmationMessage() && (
+                <span className="account-field-row__help">{helpText}</span>
+              )}
+            </div>
+            <div className="account-field-row__control">
+              <div
+                data-hj-suppress
+                className={classNames('account-field-row__box', { 'grayed-out': isGrayedOut })}
+              >
+                {renderValue(value)}
+              </div>
+              {renderConfirmationMessage() && (
+                <p className="account-field-row__confirmation text-muted mb-0">{renderConfirmationMessage()}</p>
+              )}
+            </div>
+            <div className="account-field-row__action">
               {isEditable ? (
-                <Button variant="link" onClick={handleEdit} className="ml-3">
-                  <FontAwesomeIcon className="mr-1" icon={faPencilAlt} />{intl.formatMessage(messages['account.settings.editable.field.action.edit'])}
+                <Button variant="link" onClick={handleEdit}>
+                  {intl.formatMessage(messages['account.settings.editable.field.action.edit'])}
                 </Button>
               ) : null}
             </div>
-            <p data-hj-suppress className={isGrayedOut ? 'grayed-out' : null}>{renderValue(value)}</p>
-            <p className="small text-muted mt-n2">{renderConfirmationMessage() || helpText}</p>
           </div>
         ),
       }}

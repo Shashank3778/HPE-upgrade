@@ -5,7 +5,7 @@ import {
   Button, StatefulButton, Form, Tooltip, OverlayTrigger,
 } from '@openedx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import Alert from './Alert';
 import SwitchContent from './SwitchContent';
@@ -34,6 +34,7 @@ const EmailField = (props) => {
     onChange,
     isEditing,
     isEditable,
+    isVerified,
   } = props;
   const id = `field-${name}`;
   const intl = useIntl();
@@ -151,27 +152,44 @@ const EmailField = (props) => {
           </form>
         ),
         default: (
-          <div className="form-group">
-            <div className="d-flex align-items-start">
-              <h6 aria-level="3">{label}</h6>
+          <div className="account-field-row">
+            <div className="account-field-row__label">
+              <span className="account-field-row__label-text">{label}</span>
+              {!!helpText && !renderConfirmationMessage() && (
+                <span className="account-field-row__help">{helpText}</span>
+              )}
+            </div>
+            <div className="account-field-row__control">
+              <OverlayTrigger
+                placement="top"
+                overlay={(
+                  <Tooltip id={`tooltip-${name}`} variant="light" className="d-sm-none">
+                    {renderValue()}
+                  </Tooltip>
+                )}
+              >
+                <div data-hj-suppress className="account-field-row__box text-truncate">
+                  <span className="text-truncate">{renderValue()}</span>
+                  {!confirmationValue && (
+                    <span className={`account-status-pill ml-2 ${isVerified ? 'account-status-pill--success' : 'account-status-pill--pending'}`}>
+                      {isVerified
+                        ? intl.formatMessage(messages['account.settings.field.email.verified'])
+                        : intl.formatMessage(messages['account.settings.field.email.unverified'])}
+                    </span>
+                  )}
+                </div>
+              </OverlayTrigger>
+              {renderConfirmationMessage() && (
+                <p className="account-field-row__confirmation text-muted mb-0">{renderConfirmationMessage()}</p>
+              )}
+            </div>
+            <div className="account-field-row__action">
               {isEditable ? (
-                <Button variant="link" onClick={handleEdit} className="ml-3">
-                  <FontAwesomeIcon className="mr-1" icon={faPencilAlt} />
+                <Button variant="link" onClick={handleEdit}>
                   {intl.formatMessage(messages['account.settings.editable.field.action.edit'])}
                 </Button>
               ) : null}
             </div>
-            <OverlayTrigger
-              placement="top"
-              overlay={(
-                <Tooltip id={`tooltip-${name}`} variant="light" className="d-sm-none">
-                  {renderValue()}
-                </Tooltip>
-              )}
-            >
-              <p data-hj-suppress className="text-truncate">{renderValue()}</p>
-            </OverlayTrigger>
-            {renderConfirmationMessage() || <p className="small text-muted mt-n2">{helpText}</p>}
           </div>
         ),
       }}
@@ -199,6 +217,7 @@ EmailField.propTypes = {
   onChange: PropTypes.func.isRequired,
   isEditing: PropTypes.bool,
   isEditable: PropTypes.bool,
+  isVerified: PropTypes.bool,
 };
 
 EmailField.defaultProps = {
@@ -212,6 +231,7 @@ EmailField.defaultProps = {
   helpText: undefined,
   isEditing: false,
   isEditable: true,
+  isVerified: true,
 };
 
 export default connect(editableFieldSelector, {

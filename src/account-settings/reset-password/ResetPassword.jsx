@@ -13,15 +13,21 @@ const ResetPassword = (props) => {
   const intl = useIntl();
 
   return (
-    <div className="form-group">
-      <h6 aria-level="3">
-        <FormattedMessage
-          id="account.settings.editable.field.password.reset.label"
-          defaultMessage="Password"
-          description="The password label in account settings"
-        />
-      </h6>
-      <p>
+    <div className="account-field-row">
+      <div className="account-field-row__label">
+        <span className="account-field-row__label-text">
+          <FormattedMessage
+            id="account.settings.editable.field.password.reset.label"
+            defaultMessage="Password"
+            description="The password label in account settings"
+          />
+        </span>
+      </div>
+      <div className="account-field-row__control">
+        {status === 'complete' ? <ConfirmationAlert email={email} /> : null}
+        {status === 'forbidden' ? <RequestInProgressAlert /> : null}
+      </div>
+      <div className="account-field-row__action">
         <StatefulButton
           variant="link"
           state={status}
@@ -43,9 +49,7 @@ const ResetPassword = (props) => {
             default: intl.formatMessage(messages['account.settings.editable.field.password.reset.button']),
           }}
         />
-      </p>
-      {status === 'complete' ? <ConfirmationAlert email={email} /> : null}
-      {status === 'forbidden' ? <RequestInProgressAlert /> : null}
+      </div>
     </div>
   );
 };
