@@ -22,7 +22,7 @@ var messages = defineMessages({
   },
   'header.user.menu.dashboard': {
     id: 'header.user.menu.dashboard',
-    defaultMessage: 'Dashboard',
+    defaultMessage: 'My courses',
     description: 'Link to the user dashboard'
   },
   'header.user.menu.profile': {
@@ -32,7 +32,7 @@ var messages = defineMessages({
   },
   'header.user.menu.account.settings': {
     id: 'header.user.menu.account.settings',
-    defaultMessage: 'Account',
+    defaultMessage: 'Account settings',
     description: 'Link to account settings'
   },
   'header.user.menu.order.history': {
@@ -42,7 +42,7 @@ var messages = defineMessages({
   },
   'header.user.menu.logout': {
     id: 'header.user.menu.logout',
-    defaultMessage: 'Logout',
+    defaultMessage: 'Sign out',
     description: 'Logout link'
   },
   'header.user.menu.login': {
@@ -57,8 +57,33 @@ var messages = defineMessages({
   },
   'header.user.menu.studio.home': {
     id: 'header.user.menu.studio.home',
-    defaultMessage: 'Studio Home',
+    defaultMessage: 'Studio',
     description: 'Link to the Studio Home'
+  },
+  'header.user.menu.certificates': {
+    id: 'header.user.menu.certificates',
+    defaultMessage: 'Certificates',
+    description: 'Link to the user certificates page'
+  },
+  'header.user.menu.notifications': {
+    id: 'header.user.menu.notifications',
+    defaultMessage: 'Notifications',
+    description: 'Link to the user notifications page'
+  },
+  'header.user.menu.staff.tools': {
+    id: 'header.user.menu.staff.tools',
+    defaultMessage: 'Staff Tools',
+    description: 'Heading for the staff-only tools group in the user menu'
+  },
+  'header.user.menu.instructor.dashboard': {
+    id: 'header.user.menu.instructor.dashboard',
+    defaultMessage: 'Instructor dashboard',
+    description: 'Link to the instructor dashboard'
+  },
+  'header.user.menu.help': {
+    id: 'header.user.menu.help',
+    defaultMessage: 'Help & support',
+    description: 'Link to the help and support page'
   },
   'header.label.account.nav': {
     id: 'header.label.account.nav',

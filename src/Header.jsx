@@ -11,6 +11,9 @@ import {
 } from '@edx/frontend-platform';
 
 import PropTypes from 'prop-types';
+import {
+  Person, MenuBook, Star, NotificationsNone, Settings, BarChart, Edit, HelpOutline, Logout,
+} from '@openedx/paragon/icons';
 import DesktopHeaderSlot from './plugin-slots/DesktopHeaderSlot';
 import MobileHeaderSlot from './plugin-slots/MobileHeaderSlot';
 
@@ -59,37 +62,95 @@ const Header = ({
       content: intl.formatMessage(messages['header.links.courses']),
     },
   ];
-  const defaultUserMenu = authenticatedUser === null ? [] : [{
-    heading: '',
-    items: [
-      {
-        type: 'item',
-        href: `${config.LMS_BASE_URL}/dashboard`,
-        content: intl.formatMessage(messages['header.user.menu.dashboard']),
-      },
-      {
-        type: 'item',
-        href: `${config.ACCOUNT_PROFILE_URL}/u/${authenticatedUser.username}`,
-        content: intl.formatMessage(messages['header.user.menu.profile']),
-      },
-      {
-        type: 'item',
-        href: config.ACCOUNT_SETTINGS_URL,
-        content: intl.formatMessage(messages['header.user.menu.account.settings']),
-      },
-      // Users should only see Order History if have a ORDER_HISTORY_URL define in the environment.
-      ...(config.ORDER_HISTORY_URL ? [{
-        type: 'item',
-        href: config.ORDER_HISTORY_URL,
-        content: intl.formatMessage(messages['header.user.menu.order.history']),
-      }] : []),
-      {
-        type: 'item',
-        href: config.LOGOUT_URL,
-        content: intl.formatMessage(messages['header.user.menu.logout']),
-      },
-    ],
-  }];
+  const isStaff = !!authenticatedUser?.administrator
+    || (authenticatedUser?.roles || []).some((role) => role.includes('staff') || role.includes('instructor'));
+
+  const defaultUserMenu = authenticatedUser === null ? [] : [
+    {
+      heading: '',
+      items: [
+        {
+          type: 'item',
+          href: `${config.ACCOUNT_PROFILE_URL}/u/${authenticatedUser.username}`,
+          content: intl.formatMessage(messages['header.user.menu.profile']),
+          icon: Person,
+        },
+        {
+          type: 'item',
+          href: `${config.LMS_BASE_URL}/dashboard`,
+          content: intl.formatMessage(messages['header.user.menu.dashboard']),
+          icon: MenuBook,
+        },
+        {
+          type: 'item',
+          href: config.ACCOUNT_CERTIFICATES_URL || `${config.LMS_BASE_URL}/dashboard`,
+          content: intl.formatMessage(messages['header.user.menu.certificates']),
+          icon: Star,
+          badge: config.CERTIFICATES_COUNT,
+        },
+        {
+          type: 'item',
+          href: config.NOTIFICATIONS_URL || `${config.LMS_BASE_URL}/notifications`,
+          content: intl.formatMessage(messages['header.user.menu.notifications']),
+          icon: NotificationsNone,
+          badge: config.NOTIFICATIONS_COUNT,
+        },
+        {
+          type: 'item',
+          href: config.ACCOUNT_SETTINGS_URL,
+          content: intl.formatMessage(messages['header.user.menu.account.settings']),
+          icon: Settings,
+        },
+        // Users should only see Order History if have a ORDER_HISTORY_URL define in the environment.
+        ...(config.ORDER_HISTORY_URL ? [{
+          type: 'item',
+          href: config.ORDER_HISTORY_URL,
+          content: intl.formatMessage(messages['header.user.menu.order.history']),
+        }] : []),
+      ],
+    },
+    // Staff-only tools group — only shown for administrators/instructors/staff.
+    ...(isStaff ? [{
+      heading: intl.formatMessage(messages['header.user.menu.staff.tools']),
+      items: [
+        {
+          type: 'item',
+          href: config.INSTRUCTOR_DASHBOARD_URL || `${config.LMS_BASE_URL}/dashboard`,
+          content: intl.formatMessage(messages['header.user.menu.instructor.dashboard']),
+          icon: BarChart,
+        },
+        {
+          type: 'item',
+          href: config.STUDIO_BASE_URL,
+          content: intl.formatMessage(messages['header.user.menu.studio.home']),
+          icon: Edit,
+        },
+      ],
+    }] : []),
+    {
+      heading: '',
+      items: [
+        {
+          type: 'item',
+          href: config.SUPPORT_URL || `${config.LMS_BASE_URL}/help`,
+          content: intl.formatMessage(messages['header.user.menu.help']),
+          icon: HelpOutline,
+        },
+      ],
+    },
+    {
+      heading: '',
+      items: [
+        {
+          type: 'item',
+          href: config.LOGOUT_URL,
+          content: intl.formatMessage(messages['header.user.menu.logout']),
+          icon: Logout,
+          isDanger: true,
+        },
+      ],
+    },
+  ];
 
   const mainMenu = mainMenuItems || defaultMainMenu;
   const secondaryMenu = secondaryMenuItems || [];
@@ -114,6 +175,8 @@ const Header = ({
     logoDestination: `${config.LMS_BASE_URL}/dashboard`,
     loggedIn: authenticatedUser !== null,
     username: authenticatedUser !== null ? authenticatedUser.username : null,
+    name: authenticatedUser !== null ? authenticatedUser.name : null,
+    email: authenticatedUser !== null ? authenticatedUser.email : null,
     avatar: authenticatedUser !== null ? authenticatedUser.avatar : null,
     mainMenu: getConfig().AUTHN_MINIMAL_HEADER ? [] : mainMenu,
     secondaryMenu: getConfig().AUTHN_MINIMAL_HEADER ? [] : secondaryMenu,

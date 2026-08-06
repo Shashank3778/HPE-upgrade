@@ -84,6 +84,18 @@ var getInitials = function getInitials(name) {
   }
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
+
+// Short display name, e.g. "Alex Martinez" -> "Alex M."
+var getDisplayName = function getDisplayName(name, username) {
+  if (!name) {
+    return username;
+  }
+  var parts = name.trim().split(' ').filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0];
+  }
+  return "".concat(parts[0], " ").concat(parts[parts.length - 1].charAt(0).toUpperCase(), ".");
+};
 var DesktopHeader = function DesktopHeader(_ref) {
   var mainMenu = _ref.mainMenu,
     secondaryMenu = _ref.secondaryMenu,
@@ -94,6 +106,8 @@ var DesktopHeader = function DesktopHeader(_ref) {
     logoDestination = _ref.logoDestination,
     avatar = _ref.avatar,
     username = _ref.username,
+    name = _ref.name,
+    email = _ref.email,
     loggedIn = _ref.loggedIn;
   var intl = useIntl();
   var headerRef = useRef(null);
@@ -144,8 +158,40 @@ var DesktopHeader = function DesktopHeader(_ref) {
       return false;
     }
   };
+  var displayName = getDisplayName(name, username);
 
-  // ── Top header user chip (username + avatar pill) ──
+  // ── Shared profile header block + footer logo, wraps the menu items ──
+  var renderUserMenuContent = function renderUserMenuContent() {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "site-header-user-menu__profile"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "site-header-user-menu__profile-avatar"
+    }, avatar ? /*#__PURE__*/React.createElement("img", {
+      src: avatar,
+      alt: username
+    }) : /*#__PURE__*/React.createElement("span", null, getInitials(name || username))), /*#__PURE__*/React.createElement("div", {
+      className: "site-header-user-menu__profile-info"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "site-header-user-menu__profile-name"
+    }, name || username), email && /*#__PURE__*/React.createElement("span", {
+      className: "site-header-user-menu__profile-email"
+    }, email))), /*#__PURE__*/React.createElement("div", {
+      className: "dropdown-divider",
+      role: "separator"
+    }), /*#__PURE__*/React.createElement(DesktopUserMenuSlot, {
+      menu: userMenu
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "site-header-user-menu__footer"
+    }, logo && /*#__PURE__*/React.createElement("img", {
+      className: "site-header-user-menu__footer-logo",
+      src: logo,
+      alt: logoAltText
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "site-header-user-menu__footer-version"
+    }, getConfig().SITE_VERSION || '')));
+  };
+
+  // ── Top header user chip (short name + avatar pill) ──
   var renderUserMenu = function renderUserMenu() {
     return /*#__PURE__*/React.createElement(Menu, {
       transitionClassName: "menu-dropdown",
@@ -160,16 +206,14 @@ var DesktopHeader = function DesktopHeader(_ref) {
       className: "site-header-user-chip"
     }, /*#__PURE__*/React.createElement("span", {
       className: "site-header-user-chip__name"
-    }, username), /*#__PURE__*/React.createElement("div", {
+    }, displayName), /*#__PURE__*/React.createElement("div", {
       className: "site-header-user-chip__avatar"
     }, avatar ? /*#__PURE__*/React.createElement("img", {
       src: avatar,
       alt: username
-    }) : /*#__PURE__*/React.createElement("span", null, getInitials(username))))), /*#__PURE__*/React.createElement(MenuContent, {
-      className: "mb-0 dropdown-menu show dropdown-menu-right pin-right shadow py-2"
-    }, /*#__PURE__*/React.createElement(DesktopUserMenuSlot, {
-      menu: userMenu
-    })));
+    }) : /*#__PURE__*/React.createElement("span", null, getInitials(name || username))))), /*#__PURE__*/React.createElement(MenuContent, {
+      className: "mb-0 dropdown-menu show dropdown-menu-right pin-right shadow py-2 site-header-user-menu"
+    }, renderUserMenuContent()));
   };
 
   // ── Sidebar user profile (avatar circle + name + role) ──
@@ -190,17 +234,15 @@ var DesktopHeader = function DesktopHeader(_ref) {
     }, avatar ? /*#__PURE__*/React.createElement("img", {
       src: avatar,
       alt: username
-    }) : /*#__PURE__*/React.createElement("span", null, getInitials(username))), /*#__PURE__*/React.createElement("div", {
+    }) : /*#__PURE__*/React.createElement("span", null, getInitials(name || username))), /*#__PURE__*/React.createElement("div", {
       className: "site-sidebar__user-info"
     }, /*#__PURE__*/React.createElement("span", {
       className: "site-sidebar__user-name"
-    }, username), /*#__PURE__*/React.createElement("span", {
+    }, displayName), /*#__PURE__*/React.createElement("span", {
       className: "site-sidebar__user-role"
     }, "Learner")))), /*#__PURE__*/React.createElement(MenuContent, {
-      className: "mb-0 dropdown-menu show shadow py-2"
-    }, /*#__PURE__*/React.createElement(DesktopUserMenuSlot, {
-      menu: userMenu
-    })));
+      className: "mb-0 dropdown-menu show shadow py-2 site-header-user-menu"
+    }, renderUserMenuContent()));
   };
   var renderLoggedOutItems = function renderLoggedOutItems() {
     return /*#__PURE__*/React.createElement(DesktopLoggedOutItemsSlot, {
@@ -271,6 +313,8 @@ export var desktopHeaderDataShape = {
   logoDestination: PropTypes.string,
   avatar: PropTypes.string,
   username: PropTypes.string,
+  name: PropTypes.string,
+  email: PropTypes.string,
   loggedIn: PropTypes.bool
 };
 DesktopHeader.propTypes = {
@@ -283,6 +327,8 @@ DesktopHeader.propTypes = {
   logoDestination: desktopHeaderDataShape.logoDestination,
   avatar: desktopHeaderDataShape.avatar,
   username: desktopHeaderDataShape.username,
+  name: desktopHeaderDataShape.name,
+  email: desktopHeaderDataShape.email,
   loggedIn: desktopHeaderDataShape.loggedIn
 };
 DesktopHeader.defaultProps = {
@@ -295,6 +341,8 @@ DesktopHeader.defaultProps = {
   logoDestination: null,
   avatar: null,
   username: null,
+  name: null,
+  email: null,
   loggedIn: false
 };
 export default DesktopHeader;

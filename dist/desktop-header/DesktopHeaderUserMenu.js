@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from '@openedx/paragon';
 var DesktopHeaderUserMenu = function DesktopHeaderUserMenu(_ref) {
   var menu = _ref.menu;
   return menu.map(function (group, index) {
@@ -9,7 +10,7 @@ var DesktopHeaderUserMenu = function DesktopHeaderUserMenu(_ref) {
       React.createElement(React.Fragment, {
         key: index
       }, group.heading && /*#__PURE__*/React.createElement("div", {
-        className: "dropdown-header",
+        className: "dropdown-header site-header-user-menu__section-label",
         role: "heading",
         "aria-level": "1"
       }, group.heading), group.items.map(function (_ref2) {
@@ -18,13 +19,24 @@ var DesktopHeaderUserMenu = function DesktopHeaderUserMenu(_ref) {
           href = _ref2.href,
           disabled = _ref2.disabled,
           isActive = _ref2.isActive,
-          onClick = _ref2.onClick;
+          onClick = _ref2.onClick,
+          icon = _ref2.icon,
+          badge = _ref2.badge,
+          isDanger = _ref2.isDanger;
         return /*#__PURE__*/React.createElement("a", {
-          className: "dropdown-".concat(type).concat(isActive ? ' active' : '').concat(disabled ? ' disabled' : ''),
+          className: "dropdown-".concat(type).concat(isActive ? ' active' : '').concat(disabled ? ' disabled' : '').concat(isDanger ? ' site-header-user-menu__item--danger' : ''),
           key: "".concat(type, "-").concat(content),
           href: href,
           onClick: onClick || null
-        }, content);
+        }, icon && /*#__PURE__*/React.createElement("span", {
+          className: "site-header-user-menu__item-icon"
+        }, /*#__PURE__*/React.createElement(Icon, {
+          src: icon
+        })), /*#__PURE__*/React.createElement("span", {
+          className: "site-header-user-menu__item-label"
+        }, content), badge !== undefined && badge !== null && /*#__PURE__*/React.createElement("span", {
+          className: "site-header-user-menu__item-badge"
+        }, badge));
       }), index < menu.length - 1 && /*#__PURE__*/React.createElement("div", {
         className: "dropdown-divider",
         role: "separator"
@@ -39,7 +51,11 @@ export var desktopUserMenuDataShape = PropTypes.arrayOf(PropTypes.shape({
     href: PropTypes.string,
     content: PropTypes.string,
     isActive: PropTypes.bool,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    // eslint-disable-next-line react/forbid-prop-types
+    icon: PropTypes.any,
+    badge: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    isDanger: PropTypes.bool
   }))
 }));
 DesktopHeaderUserMenu.propTypes = {

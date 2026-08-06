@@ -55,6 +55,14 @@ const getInitials = (name) => {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
+// Short display name, e.g. "Alex Martinez" -> "Alex M."
+const getDisplayName = (name, username) => {
+  if (!name) { return username; }
+  const parts = name.trim().split(' ').filter(Boolean);
+  if (parts.length === 1) { return parts[0]; }
+  return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`;
+};
+
 const DesktopHeader = ({
   mainMenu,
   secondaryMenu,
@@ -65,6 +73,8 @@ const DesktopHeader = ({
   logoDestination,
   avatar,
   username,
+  name,
+  email,
   loggedIn,
 }) => {
   const intl = useIntl();
@@ -111,7 +121,32 @@ const DesktopHeader = ({
     }
   };
 
-  // ── Top header user chip (username + avatar pill) ──
+  const displayName = getDisplayName(name, username);
+
+  // ── Shared profile header block + footer logo, wraps the menu items ──
+  const renderUserMenuContent = () => (
+    <>
+      <div className="site-header-user-menu__profile">
+        <div className="site-header-user-menu__profile-avatar">
+          {avatar
+            ? <img src={avatar} alt={username} />
+            : <span>{getInitials(name || username)}</span>}
+        </div>
+        <div className="site-header-user-menu__profile-info">
+          <span className="site-header-user-menu__profile-name">{name || username}</span>
+          {email && <span className="site-header-user-menu__profile-email">{email}</span>}
+        </div>
+      </div>
+      <div className="dropdown-divider" role="separator" />
+      <DesktopUserMenuSlot menu={userMenu} />
+      <div className="site-header-user-menu__footer">
+        {logo && <img className="site-header-user-menu__footer-logo" src={logo} alt={logoAltText} />}
+        <span className="site-header-user-menu__footer-version">{getConfig().SITE_VERSION || ''}</span>
+      </div>
+    </>
+  );
+
+  // ── Top header user chip (short name + avatar pill) ──
   const renderUserMenu = () => (
     <Menu transitionClassName="menu-dropdown" transitionTimeout={250}>
       <MenuTrigger
@@ -120,16 +155,16 @@ const DesktopHeader = ({
         className="site-header-user-trigger"
       >
         <div className="site-header-user-chip">
-          <span className="site-header-user-chip__name">{username}</span>
+          <span className="site-header-user-chip__name">{displayName}</span>
           <div className="site-header-user-chip__avatar">
             {avatar
               ? <img src={avatar} alt={username} />
-              : <span>{getInitials(username)}</span>}
+              : <span>{getInitials(name || username)}</span>}
           </div>
         </div>
       </MenuTrigger>
-      <MenuContent className="mb-0 dropdown-menu show dropdown-menu-right pin-right shadow py-2">
-        <DesktopUserMenuSlot menu={userMenu} />
+      <MenuContent className="mb-0 dropdown-menu show dropdown-menu-right pin-right shadow py-2 site-header-user-menu">
+        {renderUserMenuContent()}
       </MenuContent>
     </Menu>
   );
@@ -146,16 +181,16 @@ const DesktopHeader = ({
           <div className="site-sidebar__user-avatar">
             {avatar
               ? <img src={avatar} alt={username} />
-              : <span>{getInitials(username)}</span>}
+              : <span>{getInitials(name || username)}</span>}
           </div>
           <div className="site-sidebar__user-info">
-            <span className="site-sidebar__user-name">{username}</span>
+            <span className="site-sidebar__user-name">{displayName}</span>
             <span className="site-sidebar__user-role">Learner</span>
           </div>
         </div>
       </MenuTrigger>
-      <MenuContent className="mb-0 dropdown-menu show shadow py-2">
-        <DesktopUserMenuSlot menu={userMenu} />
+      <MenuContent className="mb-0 dropdown-menu show shadow py-2 site-header-user-menu">
+        {renderUserMenuContent()}
       </MenuContent>
     </Menu>
   );
@@ -247,6 +282,8 @@ export const desktopHeaderDataShape = {
   logoDestination: PropTypes.string,
   avatar: PropTypes.string,
   username: PropTypes.string,
+  name: PropTypes.string,
+  email: PropTypes.string,
   loggedIn: PropTypes.bool,
 };
 
@@ -260,6 +297,8 @@ DesktopHeader.propTypes = {
   logoDestination: desktopHeaderDataShape.logoDestination,
   avatar: desktopHeaderDataShape.avatar,
   username: desktopHeaderDataShape.username,
+  name: desktopHeaderDataShape.name,
+  email: desktopHeaderDataShape.email,
   loggedIn: desktopHeaderDataShape.loggedIn,
 };
 
@@ -273,6 +312,8 @@ DesktopHeader.defaultProps = {
   logoDestination: null,
   avatar: null,
   username: null,
+  name: null,
+  email: null,
   loggedIn: false,
 };
 
