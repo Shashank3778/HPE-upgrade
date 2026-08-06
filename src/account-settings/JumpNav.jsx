@@ -18,6 +18,7 @@ const JumpNav = () => {
       <Scrollspy
         items={[
           'basic-information',
+          'account-security',
           'profile-information',
           'social-media',
           ...(showNotifications ? ['notifications'] : []),
@@ -26,12 +27,17 @@ const JumpNav = () => {
           'delete-account',
         ]}
         className="list-unstyled"
-        currentClassName="font-weight-bold"
+        currentClassName="active"
         offset={-64}
       >
         <li>
           <NavHashLink to="#basic-information">
             {intl.formatMessage(messages['account.settings.section.account.information'])}
+          </NavHashLink>
+        </li>
+        <li>
+          <NavHashLink to="#account-security">
+            {intl.formatMessage(messages['account.settings.section.account.security'])}
           </NavHashLink>
         </li>
         <li>

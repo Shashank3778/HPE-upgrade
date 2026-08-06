@@ -1,4 +1,38 @@
+/*
+ * Striverra account-settings theme — ports the same design tokens used in
+ * frontend-component-header (site-sidebar / site-header-top / rich user
+ * menu) so this page's "body" matches the sidebar + top bar already shipped
+ * there. See frontend-component-header/src/index.scss for the source values.
+ */
 .page__account-settings {
+  --acc-font: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
+  --acc-accent: #5b5bd6;
+  --acc-accent-soft: #eef0ff;
+  --acc-bg: #f5f6f8;
+  --acc-text: #1a1d2e;
+  --acc-text-muted: rgba(0, 0, 0, 0.55);
+  --acc-border: #e2e4e9;
+  --acc-success-bg: #e7f7ee;
+  --acc-success-text: #1a7f4e;
+
+  font-family: var(--acc-font);
+  background: var(--acc-bg);
+  color: var(--acc-text);
+
+  .account-settings-heading {
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--acc-text);
+    }
+
+    .account-settings-subheading {
+      font-size: 14px;
+      color: var(--acc-text-muted);
+      margin-bottom: 1.75rem;
+    }
+  }
+
   .form-group {
     margin-bottom: 1.5rem;
   }
@@ -12,21 +46,108 @@
     border: none;
     padding: 0;
     display: inline-block;
+    color: var(--acc-accent);
+
+    &:hover { color: var(--acc-accent); }
   }
 
+  /* ── Left "tab" navigation — matches the pill-list styling used for the
+     header's sidebar nav items, adapted for a light card surface. ── */
   .jump-nav-sm {
     top: 1rem;
   }
 
   .jump-nav {
+    background: #ffffff;
+    border: 1px solid var(--acc-border);
+    border-radius: 12px;
+    padding: 8px;
+
+    ul { margin: 0; }
 
     li {
-      margin-bottom: .5rem;
+      margin-bottom: 2px;
 
       a {
-        text-decoration: underline;
+        display: block;
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--acc-text);
+        text-decoration: none !important;
+        transition: background 0.12s, color 0.12s;
+
+        &:hover {
+          background: var(--acc-bg);
+          text-decoration: none;
+        }
+      }
+
+      &.active a {
+        background: var(--acc-accent-soft);
+        color: var(--acc-accent);
+        font-weight: 700;
       }
     }
+  }
+
+  /* ── Card sections — each .account-section becomes a white rounded card,
+     matching the Profile / Account & security / Notifications cards. ── */
+  .account-section,
+  #notifications {
+    background: #ffffff;
+    border: 1px solid var(--acc-border);
+    border-radius: 12px;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  #notifications {
+    margin-top: 0 !important;
+  }
+
+  .section-heading {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--acc-text);
+  }
+
+  /* Divider that used to separate notifications from the rest — the card
+     styling above already provides visual separation, so hide the old rule. */
+  .border.border-light-700 {
+    border: none !important;
+    height: 0;
+    margin: 0 !important;
+  }
+
+  /* ── Status pills — "Verified" / "Enabled" style badges ── */
+  /* ── Status pills — "Verified" / "Pending verification" badge next to
+     the account email, driven by the real account activation flag. ── */
+  .account-status-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    text-transform: none;
+
+    &--success {
+      background: var(--acc-success-bg);
+      color: var(--acc-success-text);
+    }
+
+    &--pending {
+      background: #fff7e6;
+      color: #92660a;
+    }
+  }
+
+  .badge,
+  .pgn__badge {
+    font-weight: 600;
   }
 
   .custom-switch {
@@ -37,7 +158,32 @@
       left: 2.25rem;
       line-height: 1.6rem;
     }
+
+    .custom-control-input:checked ~ .custom-control-label::before {
+      background-color: var(--acc-accent);
+      border-color: var(--acc-accent);
+    }
   }
+
+  /* Paragon Form.Switch (used by NotificationSettings toggles) */
+  .pgn__form-switch input:checked + label::before,
+  .form-switch .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: var(--acc-accent) !important;
+    border-color: var(--acc-accent) !important;
+  }
+
+  .btn-outline-primary {
+    color: var(--acc-accent);
+    border-color: var(--acc-accent);
+
+    &:hover,
+    &:focus {
+      background: var(--acc-accent-soft);
+      color: var(--acc-accent);
+      border-color: var(--acc-accent);
+    }
+  }
+
   .grayed-out{
     opacity: 0.6; /* Real browsers */
     filter: alpha(opacity = 60); /* MSIE */

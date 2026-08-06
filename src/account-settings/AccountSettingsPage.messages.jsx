@@ -3,8 +3,13 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'account.settings.page.heading': {
     id: 'account.settings.page.heading',
-    defaultMessage: 'Account Settings',
+    defaultMessage: 'Account settings',
     description: 'The page heading for the account settings page.',
+  },
+  'account.settings.page.subheading': {
+    id: 'account.settings.page.subheading',
+    defaultMessage: 'Your profile, sign-in and notification preferences.',
+    description: 'The page subheading for the account settings page.',
   },
   'account.settings.loading.message': {
     id: 'account.settings.loading.message',
@@ -33,8 +38,13 @@ const messages = defineMessages({
   },
   'account.settings.section.account.information': {
     id: 'account.settings.section.account.information',
-    defaultMessage: 'Account Information',
+    defaultMessage: 'Profile',
     description: 'The basic account information section heading.',
+  },
+  'account.settings.section.account.security': {
+    id: 'account.settings.section.account.security',
+    defaultMessage: 'Account & security',
+    description: 'The account and security section heading (email, password).',
   },
   'account.settings.section.account.information.description': {
     id: 'account.settings.section.account.information.description',
@@ -43,17 +53,17 @@ const messages = defineMessages({
   },
   'account.settings.section.profile.information': {
     id: 'account.settings.section.profile.information',
-    defaultMessage: 'Profile Information',
+    defaultMessage: 'Profile details',
     description: 'The profile information section heading.',
   },
   'account.settings.section.site.preferences': {
     id: 'account.settings.section.site.preferences',
-    defaultMessage: 'Site Preferences',
+    defaultMessage: 'Language & timezone',
     description: 'The site preferences section heading.',
   },
   'account.settings.section.linked.accounts': {
     id: 'account.settings.section.linked.accounts',
-    defaultMessage: 'Linked Accounts',
+    defaultMessage: 'Linked accounts',
     description: 'The linked accounts section heading.',
   },
   'account.settings.section.linked.accounts.description': {
@@ -210,6 +220,16 @@ const messages = defineMessages({
     id: 'account.settings.field.email.empty',
     defaultMessage: 'Add email address',
     description: 'Placeholder for empty account settings email field.',
+  },
+  'account.settings.field.email.verified': {
+    id: 'account.settings.field.email.verified',
+    defaultMessage: 'Verified',
+    description: 'Badge shown next to a verified account email address.',
+  },
+  'account.settings.field.email.unverified': {
+    id: 'account.settings.field.email.unverified',
+    defaultMessage: 'Pending verification',
+    description: 'Badge shown next to an unverified account email address.',
   },
   'account.settings.field.email.confirmation': {
     id: 'account.settings.field.email.confirmation',
@@ -486,7 +506,7 @@ const messages = defineMessages({
 
   'account.settings.section.social.media': {
     id: 'account.settings.section.social.media',
-    defaultMessage: 'Social Media Links',
+    defaultMessage: 'Social media',
     description: 'Section header for social media links settings',
   },
   'account.settings.section.social.media.description': {
@@ -506,7 +526,7 @@ const messages = defineMessages({
   },
   'account.settings.jump.nav.delete.account': {
     id: 'account.settings.jump.nav.delete.account',
-    defaultMessage: 'Delete My Account',
+    defaultMessage: 'Privacy & data',
     description: 'Header for the user account deletion area',
   },
   'account.settings.field.social.platform.name.xTwitter': {

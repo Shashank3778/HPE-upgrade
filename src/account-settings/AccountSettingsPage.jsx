@@ -66,6 +66,7 @@ class AccountSettingsPage extends React.Component {
 
     this.navLinkRefs = {
       '#basic-information': React.createRef(),
+      '#account-security': React.createRef(),
       '#profile-information': React.createRef(),
       '#social-media': React.createRef(),
       '#notifications': React.createRef(),
@@ -623,25 +624,6 @@ class AccountSettingsPage extends React.Component {
             />
             )}
 
-          <EmailField
-            name="email"
-            label={this.props.intl.formatMessage(messages['account.settings.field.email'])}
-            emptyLabel={
-              this.isEditable('email')
-                ? this.props.intl.formatMessage(messages['account.settings.field.email.empty'])
-                : this.renderEmptyStaticFieldMessage()
-            }
-            value={this.props.formValues.email}
-            confirmationMessageDefinition={messages['account.settings.field.email.confirmation']}
-            helpText={this.props.intl.formatMessage(
-              messages['account.settings.field.email.help.text'],
-              { siteName: getConfig().SITE_NAME },
-            )}
-            isEditable={this.isEditable('email')}
-            {...editableFieldProps}
-          />
-          {this.renderSecondaryEmailField(editableFieldProps)}
-          <ResetPassword email={this.props.formValues.email} />
           {(!getConfig().ENABLE_COPPA_COMPLIANCE)
             && (
             <EditableSelectField
@@ -685,6 +667,33 @@ class AccountSettingsPage extends React.Component {
               {...editableFieldProps}
             />
             )}
+        </div>
+
+        <div className="account-section pt-3 mb-5" id="account-security" ref={this.navLinkRefs['#account-security']}>
+          <h2 className="section-heading h4 mb-3">
+            {this.props.intl.formatMessage(messages['account.settings.section.account.security'])}
+          </h2>
+
+          <EmailField
+            name="email"
+            label={this.props.intl.formatMessage(messages['account.settings.field.email'])}
+            emptyLabel={
+              this.isEditable('email')
+                ? this.props.intl.formatMessage(messages['account.settings.field.email.empty'])
+                : this.renderEmptyStaticFieldMessage()
+            }
+            value={this.props.formValues.email}
+            confirmationMessageDefinition={messages['account.settings.field.email.confirmation']}
+            helpText={this.props.intl.formatMessage(
+              messages['account.settings.field.email.help.text'],
+              { siteName: getConfig().SITE_NAME },
+            )}
+            isEditable={this.isEditable('email')}
+            isVerified={this.props.isActive}
+            {...editableFieldProps}
+          />
+          {this.renderSecondaryEmailField(editableFieldProps)}
+          <ResetPassword email={this.props.formValues.email} />
         </div>
 
         <div className="account-section pt-3 mb-5" id="profile-information" ref={this.navLinkRefs['#profile-information']}>
@@ -857,9 +866,14 @@ class AccountSettingsPage extends React.Component {
     return (
       <Container className="page__account-settings py-5" size="xl">
         {this.renderDuplicateTpaProviderMessage()}
-        <h1 className="mb-4">
-          {this.props.intl.formatMessage(messages['account.settings.page.heading'])}
-        </h1>
+        <div className="account-settings-heading">
+          <h1 className="mb-1">
+            {this.props.intl.formatMessage(messages['account.settings.page.heading'])}
+          </h1>
+          <p className="account-settings-subheading mb-4">
+            {this.props.intl.formatMessage(messages['account.settings.page.subheading'])}
+          </p>
+        </div>
         <div>
           <div className="row">
             <div className="col-md-3">
