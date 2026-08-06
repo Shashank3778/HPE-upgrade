@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 import { useLocation } from 'react-router-dom';
-import hpeLogo from './assets/logo.69d18cb4bc39.png';
+import hpeLogo from './assets/hpe-logo-white.png';
 import './custom-header.scss';
 
 /* ── Icons ──────────────────────────────────────────────── */
@@ -115,10 +115,18 @@ const AppLayout = ({ courseTitle, children }) => {
 
   const lmsBase = config?.LMS_BASE_URL || '';
   const dashboardUrl = `${lmsBase}/dashboard`;
-  const catalogUrl = 'https://apps.stage.test.striverra.com/learner-dashboard/catalog';
-  const discussionsUrl = `${lmsBase}/discuss`;
-  const certificatesUrl = `${lmsBase}/certificates`;
-  const profileUrl = config?.ACCOUNT_PROFILE_URL || `${lmsBase}/u/${user?.username}`;
+  const catalogUrl = config?.COURSE_CATALOG_URL || `${lmsBase}/courses`;
+  const discussionsUrl = config?.DISCUSSIONS_MFE_BASE_URL || `${lmsBase}/discuss`;
+  // Matches the same fallback header repo's Header.jsx uses for the
+  // Certificates menu item — there's no generic certificates path on the
+  // LMS itself, so it falls back to the dashboard rather than guessing one.
+  const certificatesUrl = config?.ACCOUNT_CERTIFICATES_URL || dashboardUrl;
+  // Matches header repo's Header.jsx exactly: ACCOUNT_PROFILE_URL is the
+  // profile app's *base* URL, not the full profile page — the username
+  // path has to be appended the same way header does it.
+  const profileUrl = config?.ACCOUNT_PROFILE_URL
+    ? `${config.ACCOUNT_PROFILE_URL}/u/${user?.username}`
+    : `${lmsBase}/u/${user?.username}`;
   const logoutUrl = config?.LOGOUT_URL || `${lmsBase}/logout`;
 
   const firstName = (user?.name || '').split(' ').filter(Boolean)[0] || user?.username || 'Learner';
@@ -134,7 +142,10 @@ const AppLayout = ({ courseTitle, children }) => {
     || (user?.roles || []).some((role) => role.includes('staff') || role.includes('instructor'));
 
   const myCoursesUrl = dashboardUrl;
-  const accountSettingsUrl = `${lmsBase}/account/settings`;
+  // Matches header repo's Header.jsx exactly: use the real ACCOUNT_SETTINGS_URL
+  // config value (wherever that app is actually deployed) instead of assuming
+  // it lives at a path under the LMS domain.
+  const accountSettingsUrl = config?.ACCOUNT_SETTINGS_URL || `${lmsBase}/account/settings`;
   const notificationsUrl = config?.NOTIFICATIONS_URL || `${lmsBase}/notifications`;
   const helpUrl = config?.SUPPORT_URL || `${lmsBase}/help`;
   const instructorDashboardUrl = config?.INSTRUCTOR_DASHBOARD_URL || dashboardUrl;
@@ -166,7 +177,7 @@ const AppLayout = ({ courseTitle, children }) => {
 
         <nav className="ch-nav" aria-label="Main">
           <NavItem icon={<DashboardIcon />} label="Dashboard" href={dashboardUrl} active={isActive('/home')} />
-          <NavItem icon={<CatalogIcon />} label="Discovery" href={catalogUrl} active={false} />
+          <NavItem icon={<CatalogIcon />} label="Catalog" href={catalogUrl} active={false} />
         </nav>
       </aside>
 
@@ -220,17 +231,6 @@ const AppLayout = ({ courseTitle, children }) => {
                   <a href={profileUrl} className="ch-dropdown-item">
                     <span className="ch-dropdown-item-icon"><ProfileIcon /></span>
                     <span className="ch-dropdown-item-label">Profile</span>
-                  </a>
-                  <a href={myCoursesUrl} className="ch-dropdown-item">
-                    <span className="ch-dropdown-item-icon"><MyCoursesIcon /></span>
-                    <span className="ch-dropdown-item-label">My courses</span>
-                  </a>
-                  <a href={certificatesUrl} className="ch-dropdown-item">
-                    <span className="ch-dropdown-item-icon"><CertificatesIcon /></span>
-                    <span className="ch-dropdown-item-label">Certificates</span>
-                    {(certificatesCount !== undefined && certificatesCount !== null) && (
-                      <span className="ch-dropdown-item-badge">{certificatesCount}</span>
-                    )}
                   </a>
                   <a href={notificationsUrl} className="ch-dropdown-item">
                     <span className="ch-dropdown-item-icon"><BellIcon /></span>
