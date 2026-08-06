@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 import { useLocation } from 'react-router-dom';
-import hpeLogo from './assets/hpe-logo-white.png';
+import hpeLogo from './assets/logo.69d18cb4bc39.png';
 import './custom-header.scss';
 
 /* ── Icons ──────────────────────────────────────────────── */
@@ -166,10 +166,7 @@ const AppLayout = ({ courseTitle, children }) => {
 
         <nav className="ch-nav" aria-label="Main">
           <NavItem icon={<DashboardIcon />} label="Dashboard" href={dashboardUrl} active={isActive('/home')} />
-          <NavItem icon={<CatalogIcon />} label="Catalog" href={catalogUrl} active={false} />
-          <NavItem icon={<DiscussionsIcon />} label="Discussions" href={discussionsUrl} active={isActive('/discussion')} />
-          <NavItem icon={<CertificatesIcon />} label="Certificates" href={certificatesUrl} active={isActive('/certificate')} />
-          <NavItem icon={<ProfileIcon />} label="Profile" href={profileUrl} active={false} />
+          <NavItem icon={<CatalogIcon />} label="Discovery" href={catalogUrl} active={false} />
         </nav>
       </aside>
 
