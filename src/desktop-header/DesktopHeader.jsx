@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
-import { useLocation } from 'react-router-dom';
 import { Icon } from '@openedx/paragon';
 import {
-  BookOpen,
-  Compass,
-  Layout,
+  Home,
+  ViewList,
   GridView,
-
+  ShowChart,
+  Forum,
+  StarFilled,
 } from '@openedx/paragon/icons';
 
 // Local Components
@@ -26,25 +26,41 @@ import { desktopUserMenuDataShape } from './DesktopHeaderUserMenu';
 // i18n
 import messages from '../Header.messages';
 
-// Hardcoded sidebar tabs
+// Sidebar tabs. `key` drives which tab shows as active — see
+// classifyPage() below — independent of the href itself.
 const SIDEBAR_TABS = [
-  { label: 'Courses', href: '/', icon: BookOpen },
-  { label: 'Discovery', href: '/courses', icon: Compass },
-  { label: 'Programs', href: '/programs', icon:   GridView },
+  { key: 'dashboard', label: 'Dashboard', href: '/', icon: Home },
+  { key: 'catalog', label: 'Catalog', href: 'https://stage.lxp.striverra.com/courses', icon: GridView },
 ];
 
-// Map URL paths to readable page names
-const getPageName = (pathname) => {
-  if (pathname.includes('dashboard')) { return 'Dashboard'; }
-  if (pathname.includes('my-courses') || pathname.includes('learner-dashboard')) { return 'My Courses'; }
-  if (pathname.includes('catalog') || pathname.includes('course-search') || pathname.includes('courses')) { return 'Discovery'; }
-  if (pathname.includes('progress')) { return 'Progress'; }
-  if (pathname.includes('discussion')) { return 'Discussions'; }
-  if (pathname.includes('certificate')) { return 'Certificates'; }
-  if (pathname.includes('profile')) { return 'Profile'; }
-  if (pathname.includes('account')) { return 'Account'; }
-  if (pathname.includes('programs')) { return 'Programs'; }
-  return 'Dashboard';
+// Classify the current page from the real browser URL (hostname + pathname),
+// not react-router's location. This header package is shared across several
+// separately-deployed MFEs (dashboard, account, profile, learning, ...),
+// each with its own router basename — react-router's useLocation() strips
+// that basename, so on e.g. the account app "/account/" becomes just "/"
+// and every keyword check below would silently fail. window.location gives
+// us the real, unstripped URL instead, so this works the same everywhere.
+const classifyPage = () => {
+  let combined = '';
+  try {
+    combined = `${window.location.hostname}${window.location.pathname}`.toLowerCase();
+  } catch (e) {
+    return { pageName: 'Dashboard', navKey: 'dashboard' };
+  }
+
+  if (combined.includes('certificate')) { return { pageName: 'Certificates', navKey: 'certificates' }; }
+  if (combined.includes('discussion')) { return { pageName: 'Discussions', navKey: 'discussions' }; }
+  if (combined.includes('progress')) { return { pageName: 'Progress', navKey: 'progress' }; }
+  if (combined.includes('catalog') || combined.includes('course-search') || combined.includes('course-catalog')) {
+    return { pageName: 'Catalog', navKey: 'catalog' };
+  }
+  if (combined.includes('my-courses') || combined.includes('learner-dashboard') || combined.includes('dashboard')) {
+    return { pageName: 'Dashboard', navKey: 'dashboard' };
+  }
+  if (combined.includes('profile')) { return { pageName: 'Profile', navKey: null }; }
+  if (combined.includes('account')) { return { pageName: 'Account', navKey: null }; }
+  if (combined.includes('courses')) { return { pageName: 'My Courses', navKey: 'mycourses' }; }
+  return { pageName: 'Dashboard', navKey: 'dashboard' };
 };
 
 // Get initials from full name or username
@@ -102,24 +118,10 @@ const DesktopHeader = ({
     return () => document.body.classList.remove('has-site-sidebar');
   }, []);
 
-  // Get current page name from URL
-  let pageName = 'Dashboard';
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const location = useLocation();
-    pageName = getPageName(location.pathname);
-  } catch (e) {
-    pageName = getPageName(window.location.pathname);
-  }
-
-  const isActive = (href) => {
-    try {
-      return window.location.pathname === href
-        || (href !== '/' && window.location.pathname.includes(href));
-    } catch (e) {
-      return false;
-    }
-  };
+  // Get current page name + which sidebar tab (if any) should be active,
+  // from the real browser URL — see classifyPage() for why this must not
+  // use react-router's useLocation() here.
+  const { pageName, navKey } = classifyPage();
 
   const displayName = getDisplayName(name, username);
 
@@ -185,7 +187,7 @@ const DesktopHeader = ({
           </div>
           <div className="site-sidebar__user-info">
             <span className="site-sidebar__user-name">{displayName}</span>
-            <span className="site-sidebar__user-role">Learner</span>
+            <span className="site-sidebar__user-role">User</span>
           </div>
         </div>
       </MenuTrigger>
@@ -216,7 +218,7 @@ const DesktopHeader = ({
             <a
               key={tab.href}
               href={tab.href}
-              className={`site-sidebar__nav-item${isActive(tab.href) ? ' active' : ''}`}
+              className={`site-sidebar__nav-item${navKey === tab.key ? ' active' : ''}`}
             >
               <span className="site-sidebar__nav-icon">
                 <Icon src={tab.icon} />

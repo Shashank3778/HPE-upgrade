@@ -8,9 +8,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
-import { useLocation } from 'react-router-dom';
 import { Icon } from '@openedx/paragon';
-import { BookOpen, Compass, Layout, GridView } from '@openedx/paragon/icons';
+import { Home, ViewList, GridView, ShowChart, Forum, StarFilled } from '@openedx/paragon/icons';
 
 // Local Components
 import DesktopUserMenuToggleSlot from '../plugin-slots/DesktopUserMenuToggleSlot';
@@ -26,51 +25,89 @@ import { desktopUserMenuDataShape } from './DesktopHeaderUserMenu';
 // i18n
 import messages from '../Header.messages';
 
-// Hardcoded sidebar tabs
+// Sidebar tabs. `key` drives which tab shows as active — see
+// classifyPage() below — independent of the href itself.
 var SIDEBAR_TABS = [{
-  label: 'Courses',
+  key: 'dashboard',
+  label: 'Dashboard',
   href: '/',
-  icon: BookOpen
+  icon: Home
 }, {
-  label: 'Discovery',
-  href: '/courses',
-  icon: Compass
-}, {
-  label: 'Programs',
-  href: '/programs',
+  key: 'catalog',
+  label: 'Catalog',
+  href: 'https://stage.lxp.striverra.com/courses',
   icon: GridView
 }];
 
-// Map URL paths to readable page names
-var getPageName = function getPageName(pathname) {
-  if (pathname.includes('dashboard')) {
-    return 'Dashboard';
+// Classify the current page from the real browser URL (hostname + pathname),
+// not react-router's location. This header package is shared across several
+// separately-deployed MFEs (dashboard, account, profile, learning, ...),
+// each with its own router basename — react-router's useLocation() strips
+// that basename, so on e.g. the account app "/account/" becomes just "/"
+// and every keyword check below would silently fail. window.location gives
+// us the real, unstripped URL instead, so this works the same everywhere.
+var classifyPage = function classifyPage() {
+  var combined = '';
+  try {
+    combined = "".concat(window.location.hostname).concat(window.location.pathname).toLowerCase();
+  } catch (e) {
+    return {
+      pageName: 'Dashboard',
+      navKey: 'dashboard'
+    };
   }
-  if (pathname.includes('my-courses') || pathname.includes('learner-dashboard')) {
-    return 'My Courses';
+  if (combined.includes('certificate')) {
+    return {
+      pageName: 'Certificates',
+      navKey: 'certificates'
+    };
   }
-  if (pathname.includes('catalog') || pathname.includes('course-search') || pathname.includes('courses')) {
-    return 'Discovery';
+  if (combined.includes('discussion')) {
+    return {
+      pageName: 'Discussions',
+      navKey: 'discussions'
+    };
   }
-  if (pathname.includes('progress')) {
-    return 'Progress';
+  if (combined.includes('progress')) {
+    return {
+      pageName: 'Progress',
+      navKey: 'progress'
+    };
   }
-  if (pathname.includes('discussion')) {
-    return 'Discussions';
+  if (combined.includes('catalog') || combined.includes('course-search') || combined.includes('course-catalog')) {
+    return {
+      pageName: 'Catalog',
+      navKey: 'catalog'
+    };
   }
-  if (pathname.includes('certificate')) {
-    return 'Certificates';
+  if (combined.includes('my-courses') || combined.includes('learner-dashboard') || combined.includes('dashboard')) {
+    return {
+      pageName: 'Dashboard',
+      navKey: 'dashboard'
+    };
   }
-  if (pathname.includes('profile')) {
-    return 'Profile';
+  if (combined.includes('profile')) {
+    return {
+      pageName: 'Profile',
+      navKey: null
+    };
   }
-  if (pathname.includes('account')) {
-    return 'Account';
+  if (combined.includes('account')) {
+    return {
+      pageName: 'Account',
+      navKey: null
+    };
   }
-  if (pathname.includes('programs')) {
-    return 'Programs';
+  if (combined.includes('courses')) {
+    return {
+      pageName: 'My Courses',
+      navKey: 'mycourses'
+    };
   }
-  return 'Dashboard';
+  return {
+    pageName: 'Dashboard',
+    navKey: 'dashboard'
+  };
 };
 
 // Get initials from full name or username
@@ -142,22 +179,12 @@ var DesktopHeader = function DesktopHeader(_ref) {
     };
   }, []);
 
-  // Get current page name from URL
-  var pageName = 'Dashboard';
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    var location = useLocation();
-    pageName = getPageName(location.pathname);
-  } catch (e) {
-    pageName = getPageName(window.location.pathname);
-  }
-  var isActive = function isActive(href) {
-    try {
-      return window.location.pathname === href || href !== '/' && window.location.pathname.includes(href);
-    } catch (e) {
-      return false;
-    }
-  };
+  // Get current page name + which sidebar tab (if any) should be active,
+  // from the real browser URL — see classifyPage() for why this must not
+  // use react-router's useLocation() here.
+  var _classifyPage = classifyPage(),
+    pageName = _classifyPage.pageName,
+    navKey = _classifyPage.navKey;
   var displayName = getDisplayName(name, username);
 
   // ── Shared profile header block + footer logo, wraps the menu items ──
@@ -240,7 +267,7 @@ var DesktopHeader = function DesktopHeader(_ref) {
       className: "site-sidebar__user-name"
     }, displayName), /*#__PURE__*/React.createElement("span", {
       className: "site-sidebar__user-role"
-    }, "Learner")))), /*#__PURE__*/React.createElement(MenuContent, {
+    }, "User")))), /*#__PURE__*/React.createElement(MenuContent, {
       className: "mb-0 dropdown-menu show shadow py-2 site-header-user-menu"
     }, renderUserMenuContent()));
   };
@@ -266,7 +293,7 @@ var DesktopHeader = function DesktopHeader(_ref) {
     return /*#__PURE__*/React.createElement("a", {
       key: tab.href,
       href: tab.href,
-      className: "site-sidebar__nav-item".concat(isActive(tab.href) ? ' active' : '')
+      className: "site-sidebar__nav-item".concat(navKey === tab.key ? ' active' : '')
     }, /*#__PURE__*/React.createElement("span", {
       className: "site-sidebar__nav-icon"
     }, /*#__PURE__*/React.createElement(Icon, {
