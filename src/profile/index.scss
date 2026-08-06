@@ -259,3 +259,274 @@
 .overflowWrap-breakWord {
   overflow-wrap: break-word;
 }
+
+/*
+ * Striverra profile theme — same design tokens as the header/learning/
+ * account apps (see frontend-component-header/src/index.scss).
+ */
+.profile-page {
+  --pp-font: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
+  --pp-accent: #5b5bd6;
+  --pp-accent-soft: #eef0ff;
+  --pp-bg: #f5f6f8;
+  --pp-text: #1a1d2e;
+  --pp-text-muted: rgba(0, 0, 0, 0.55);
+  --pp-border: #e2e4e9;
+
+  font-family: var(--pp-font);
+  background: var(--pp-bg);
+  min-height: 100vh;
+}
+
+.pp-page-wrap {
+  background: var(--pp-bg);
+}
+
+/* ── Header card ────────────────────────────────────────── */
+.pp-header-card {
+  background: #ffffff;
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.pp-avatar-wrap {
+  margin-right: 20px;
+}
+
+.profile-avatar-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--pp-accent-soft, #eef0ff);
+  color: var(--pp-accent, #5b5bd6);
+  font-family: var(--pp-font, inherit);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.pp-identity {
+  min-width: 0;
+}
+
+.pp-identity__name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--pp-text);
+}
+
+.pp-identity__username {
+  font-size: 13px;
+  color: var(--pp-text-muted);
+}
+
+.pp-identity__meta {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--pp-text-muted);
+}
+
+.pp-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+
+  &__edit {
+    color: var(--pp-accent);
+    border-color: var(--pp-accent);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+
+    &:hover {
+      background: var(--pp-accent-soft);
+      color: var(--pp-accent);
+      border-color: var(--pp-accent);
+    }
+  }
+
+  &__settings {
+    color: var(--pp-accent);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover { color: var(--pp-accent); text-decoration: underline; }
+  }
+}
+
+/* ── Stats row ──────────────────────────────────────────── */
+.pp-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--pp-border);
+}
+
+.pp-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.pp-stat__value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pp-text);
+}
+
+.pp-stat__label {
+  font-size: 12px;
+  color: var(--pp-text-muted);
+}
+
+/* ── Certificates section ───────────────────────────────── */
+.pp-certs {
+  width: 100%;
+}
+
+.pp-certs__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pp-certs__heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pp-text);
+}
+
+.pp-certs__description {
+  font-size: 13px;
+  color: var(--pp-text-muted);
+  max-width: 640px;
+  margin-top: 2px;
+}
+
+.pp-certs__view-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pp-accent);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover { color: var(--pp-accent); text-decoration: underline; }
+}
+
+.pp-certs__empty {
+  color: var(--pp-text-muted);
+  padding: 24px 0;
+}
+
+.pp-certs__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Certificate card ───────────────────────────────────── */
+.pp-cert-card {
+  background: #ffffff;
+  border: 1px solid var(--pp-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.pp-cert-banner {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image:
+    linear-gradient(var(--pp-banner-bg, rgba(0, 0, 0, 0.05)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pp-banner-bg, rgba(0, 0, 0, 0.05)) 1px, transparent 1px);
+  background-size: 18px 18px;
+
+  &--blue { background-color: #eaf1ff; --pp-banner-bg: rgba(37, 99, 235, 0.12); }
+  &--purple { background-color: #f1eeff; --pp-banner-bg: rgba(91, 91, 214, 0.14); }
+  &--teal { background-color: #e8f7f5; --pp-banner-bg: rgba(13, 148, 136, 0.12); }
+  &--green { background-color: #eef8ea; --pp-banner-bg: rgba(76, 145, 47, 0.12); }
+  &--peach { background-color: #fdefe8; --pp-banner-bg: rgba(217, 119, 6, 0.12); }
+  &--mint { background-color: #e9f7f0; --pp-banner-bg: rgba(5, 150, 105, 0.12); }
+}
+
+.pp-cert-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pp-accent);
+}
+
+.pp-cert-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pp-cert-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pp-text);
+}
+
+.pp-cert-meta {
+  font-size: 12px;
+  color: var(--pp-text-muted);
+}
+
+.pp-cert-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+
+  &__view {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    color: var(--pp-accent);
+    border-color: var(--pp-accent);
+
+    &:hover {
+      background: var(--pp-accent-soft);
+      color: var(--pp-accent);
+      border-color: var(--pp-accent);
+    }
+  }
+
+  &__download {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pp-accent);
+    text-decoration: none;
+
+    &:hover { color: var(--pp-accent); text-decoration: underline; }
+  }
+}

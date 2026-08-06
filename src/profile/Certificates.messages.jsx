@@ -6,10 +6,10 @@ const messages = defineMessages({
     defaultMessage: 'My Certificates',
     description: 'A section of a user profile',
   },
-  'profile.certificates.view.certificate': {
-    id: 'profile.certificates.view.certificate',
-    defaultMessage: 'View Certificate',
-    description: 'A call to action to view a certificate',
+  'profile.certificates.download.pdf': {
+    id: 'profile.certificates.download.pdf',
+    defaultMessage: 'Download PDF',
+    description: 'A call to action to download a certificate',
   },
   'profile.certificates.types.verified': {
     id: 'profile.certificates.types.verified',

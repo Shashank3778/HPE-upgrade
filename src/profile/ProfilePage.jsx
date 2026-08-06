@@ -33,7 +33,6 @@ import Education from './forms/Education';
 import SocialLinks from './forms/SocialLinks';
 import Bio from './forms/Bio';
 import DateJoined from './DateJoined';
-import UserCertificateSummary from './UserCertificateSummary';
 import PageLoading from './PageLoading';
 import Certificates from './Certificates';
 
@@ -45,6 +44,14 @@ import { useIsOnMobileScreen, useIsOnTabletScreen } from './data/hooks';
 import AdditionalProfileFieldsSlot from '../plugin-slots/AdditionalProfileFieldsSlot';
 
 ensureConfig(['CREDENTIALS_BASE_URL', 'LMS_BASE_URL', 'ACCOUNT_SETTINGS_URL'], 'ProfilePage');
+
+// "Alex Martinez" -> "AM" (falls back to first two chars of a single token).
+const getInitials = (source) => {
+  if (!source) { return ''; }
+  const parts = source.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 1) { return parts[0].slice(0, 2).toUpperCase(); }
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
 
 const ProfilePage = ({ params }) => {
   const dispatch = useDispatch();
@@ -160,6 +167,37 @@ const ProfilePage = ({ params }) => {
     )
   );
 
+  // Only "certificates earned" is backed by real data from this app today.
+  // The row is built to support more tiles (courses in progress, learning
+  // time, discussion posts) once those data sources exist elsewhere —
+  // any tile whose value is null/undefined is simply skipped rather than
+  // showing a fabricated number.
+  const renderStats = () => {
+    const stats = [
+      {
+        key: 'certificates',
+        value: (courseCertificates || []).length,
+        label: intl.formatMessage(messages['profile.stats.certificatesEarned']),
+      },
+      // { key: 'coursesInProgress', value: undefined, label: '...' },
+      // { key: 'learningTime', value: undefined, label: '...' },
+      // { key: 'discussionPosts', value: undefined, label: '...' },
+    ].filter((stat) => stat.value !== undefined && stat.value !== null);
+
+    if (!stats.length) { return null; }
+
+    return (
+      <div className="pp-stats">
+        {stats.map((stat) => (
+          <div className="pp-stat" key={stat.key}>
+            <span className="pp-stat__value">{stat.value}</span>
+            <span className="pp-stat__label">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const commonFormProps = {
     openHandler: handleOpen,
     closeHandler: handleClose,
@@ -175,86 +213,84 @@ const ProfilePage = ({ params }) => {
         <>
           <div
             className={classNames(
-              'profile-page-bg-banner bg-primary d-md-block align-items-center h-100 w-100',
+              'pp-page-wrap',
               { 'px-3 py-4': isMobileView },
               { 'px-120px py-5.5': !isMobileView },
             )}
           >
-            <div
-              className={classNames([
-                'col container-fluid w-100 h-100 bg-white py-0 rounded-75',
-                {
-                  'px-3': isMobileView,
-                  'px-40px': !isMobileView,
-                },
-              ])}
-            >
+            <div className="pp-header-card">
               <div
                 className={classNames([
-                  'col h-100 w-100 px-0 justify-content-start g-15rem',
-                  {
-                    'py-4': isMobileView,
-                    'py-36px': !isMobileView,
-                  },
+                  'd-flex flex-wrap align-items-center w-100',
+                  isMobileView || isTabletView ? 'flex-column' : 'flex-row',
                 ])}
               >
+                <ProfileAvatar
+                  className="pp-avatar-wrap"
+                  src={profileImage.src}
+                  isDefault={profileImage.isDefault}
+                  initials={getInitials(name || params.username)}
+                  onSave={handleSaveProfilePhoto}
+                  onDelete={handleDeleteProfilePhoto}
+                  savePhotoState={savePhotoState}
+                  isEditable={isAuthenticatedUserProfile()}
+                />
                 <div
                   className={classNames([
-                    'row-auto d-flex flex-wrap align-items-center h-100 w-100 justify-content-start g-15rem',
-                    isMobileView || isTabletView ? 'flex-column' : 'flex-row',
+                    'pp-identity flex-grow-1',
+                    isMobileView || isTabletView
+                      ? 'd-flex flex-column justify-content-center align-items-center text-center'
+                      : '',
                   ])}
                 >
-                  <ProfileAvatar
-                    className="col p-0"
-                    src={profileImage.src}
-                    isDefault={profileImage.isDefault}
-                    onSave={handleSaveProfilePhoto}
-                    onDelete={handleDeleteProfilePhoto}
-                    savePhotoState={savePhotoState}
-                    isEditable={isAuthenticatedUserProfile()}
-                  />
-                  <div
-                    className={classNames([
-                      'col h-100 w-100 m-0 p-0',
-                      isMobileView || isTabletView
-                        ? 'd-flex flex-column justify-content-center align-items-center'
-                        : 'justify-content-start align-items-start',
-                    ])}
+                  <p data-hj-suppress className="pp-identity__name m-0">
+                    {isBlockVisible(name) && name ? name : params.username}
+                  </p>
+                  {isBlockVisible(name) && name && (
+                    <p className="pp-identity__username m-0">{params.username}</p>
+                  )}
+                  <div className={classNames(
+                    'pp-identity__meta',
+                    isMobileView ? 'd-flex justify-content-center align-items-center flex-column' : '',
+                  )}
                   >
-                    <p className="row m-0 font-weight-bold text-truncate text-primary-500 h3">
-                      {params.username}
-                    </p>
-                    {isBlockVisible(name) && (
-                    <p className="row pt-2 text-gray-800 font-weight-normal m-0 p">
-                      {name}
-                    </p>
-                    )}
-                    <div className={classNames(
-                      'row pt-2 m-0',
-                      isMobileView
-                        ? 'd-flex justify-content-center align-items-center flex-column'
-                        : 'g-1rem',
-                    )}
-                    >
-                      <DateJoined date={dateJoined} />
-                      <UserCertificateSummary count={courseCertificates?.length || 0} />
-                    </div>
-                  </div>
-                  <div className={classNames([
-                    'p-0 ',
-                    isMobileView || isTabletView ? 'col d-flex justify-content-center' : 'col-auto',
-                  ])}
-                  >
-                    {renderViewMyRecordsButton()}
+                    <DateJoined date={dateJoined} />
                   </div>
                 </div>
+                <div className={classNames([
+                  'pp-actions',
+                  isMobileView || isTabletView ? 'd-flex justify-content-center' : '',
+                ])}
+                >
+                  {isAuthenticatedUserProfile() && (
+                    <Hyperlink
+                      destination="#profile-information-section"
+                      className="btn btn-outline-primary pp-actions__edit"
+                      showLaunchIcon={false}
+                    >
+                      {intl.formatMessage(messages['profile.editProfile'])}
+                    </Hyperlink>
+                  )}
+                  {isAuthenticatedUserProfile() && context.config.ACCOUNT_SETTINGS_URL && (
+                    <Hyperlink
+                      destination={context.config.ACCOUNT_SETTINGS_URL}
+                      className="pp-actions__settings"
+                      showLaunchIcon={false}
+                    >
+                      {intl.formatMessage(messages['profile.settings'])}
+                    </Hyperlink>
+                  )}
+                  {renderViewMyRecordsButton()}
+                </div>
               </div>
+              {renderStats()}
               <div className="ml-auto">
                 {renderPhotoUploadErrorMessage()}
               </div>
             </div>
           </div>
           <div
+            id="profile-information-section"
             className={classNames([
               'col d-inline-flex h-100 w-100 align-items-start justify-content-start g-3rem',
               isMobileView ? 'py-4 px-3' : 'px-120px py-6',

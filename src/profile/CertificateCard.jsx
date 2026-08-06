@@ -5,10 +5,32 @@ import { Hyperlink } from '@openedx/paragon';
 import get from 'lodash.get';
 
 import classNames from 'classnames';
-import professionalCertificateSVG from './assets/professional-certificate.svg';
-import verifiedCertificateSVG from './assets/verified-certificate.svg';
 import messages from './Certificates.messages';
-import { useIsOnMobileScreen } from './data/hooks';
+
+// Cycle through a small palette of soft banner colors, deterministically
+// chosen from the course id so the same course always gets the same color.
+const BANNER_VARIANTS = ['blue', 'purple', 'teal', 'green', 'peach', 'mint'];
+
+const getBannerVariant = (key) => {
+  if (!key) { return BANNER_VARIANTS[0]; }
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) % BANNER_VARIANTS.length;
+  }
+  return BANNER_VARIANTS[Math.abs(hash) % BANNER_VARIANTS.length];
+};
+
+// "Foundations of Python Programming" -> "PY" (first letters of the first
+// two significant words, skipping short filler words).
+const getBadgeInitials = (title) => {
+  if (!title) { return '--'; }
+  const words = title
+    .split(/\s+/)
+    .filter((word) => word.length > 2 || /^[A-Z]/.test(word));
+  const source = words.length ? words : title.split(/\s+/);
+  if (source.length === 1) { return source[0].slice(0, 2).toUpperCase(); }
+  return (source[0].charAt(0) + source[1].charAt(0)).toUpperCase();
+};
 
 const CertificateCard = ({
   certificateType,
@@ -20,104 +42,62 @@ const CertificateCard = ({
   uuid,
 }) => {
   const intl = useIntl();
-
-  const certificateIllustration = {
-    professional: professionalCertificateSVG,
-    'no-id-professional': professionalCertificateSVG,
-    verified: verifiedCertificateSVG,
-    honor: null,
-    audit: null,
-  }[certificateType] || null;
-
-  const isMobileView = useIsOnMobileScreen();
+  const badgeInitials = getBadgeInitials(courseDisplayName);
+  const bannerVariant = getBannerVariant(courseId);
+  // Only one certificate URL is exposed by the API today, so "View" and
+  // "Download PDF" both point at it rather than fabricating a second link.
+  const shortId = uuid ? uuid.replace(/-/g, '').slice(0, 6) : null;
 
   return (
     <div
       key={`${modifiedDate}-${courseId}`}
-      className="col-auto d-flex align-items-center p-0"
+      className="pp-cert-card"
     >
-      <div className="col certificate p-4 border-light-400 bg-light-200 w-100 h-100">
-        <div
-          className="certificate-type-illustration"
-          style={{ backgroundImage: `url(${certificateIllustration})` }}
-        />
-        <div className={classNames(
-          'd-flex flex-column position-relative p-0',
-          { 'max-width-304px': isMobileView },
-          { 'width-314px': !isMobileView },
-        )}
-        >
-          <div className="w-100 color-black">
-            <p className={classNames([
-              'mb-0 font-weight-normal',
-              isMobileView ? 'x-small' : 'small',
-            ])}
-            >
-              {intl.formatMessage(get(
-                messages,
-                `profile.certificates.types.${certificateType}`,
-                messages['profile.certificates.types.unknown'],
-              ))}
-            </p>
-            <p className={classNames([
-              'm-0 color-black',
-              isMobileView ? 'h5' : 'h4',
-            ])}
-            >
-              {courseDisplayName}
-            </p>
-            <p className={classNames([
-              'mb-0',
-              isMobileView ? 'x-small' : 'small',
-            ])}
-            >
-              <FormattedMessage
-                id="profile.certificate.organization.label"
-                defaultMessage="From"
-              />
-            </p>
-            <h5 className="mb-0 color-black">{courseOrganization}</h5>
-            <p className={classNames([
-              'mb-0',
-              isMobileView ? 'x-small' : 'small',
-            ])}
-            >
-              <FormattedMessage
-                id="profile.certificate.completion.date.label"
-                defaultMessage="Completed on {date}"
-                values={{
-                  date: <FormattedDate value={new Date(modifiedDate)} />,
-                }}
-              />
-            </p>
-          </div>
-          <div className="pt-3">
-            <Hyperlink
-              destination={downloadUrl}
-              target="_blank"
-              showLaunchIcon={false}
-              className={classNames(
-                'btn btn-primary font-weight-normal px-4 py-10px',
-                { 'btn-sm': isMobileView },
-              )}
-            >
-              {intl.formatMessage(messages['profile.certificates.view.certificate'])}
-            </Hyperlink>
-          </div>
-          <p
-            className={classNames([
-              'mb-0 pt-3',
-              isMobileView ? 'x-small' : 'small',
-            ])}
+      <div className={classNames('pp-cert-banner', `pp-cert-banner--${bannerVariant}`)}>
+        <span className="pp-cert-badge">{badgeInitials}</span>
+      </div>
+      <div className="pp-cert-body">
+        <p className="pp-cert-title m-0">{courseDisplayName}</p>
+        <p className="pp-cert-meta m-0">
+          <FormattedMessage
+            id="profile.certificate.meta.line"
+            defaultMessage="Issued {date} · {organization}{idSuffix}"
+            description="Certificate metadata line: issue date, organization and a short id"
+            values={{
+              date: <FormattedDate value={new Date(modifiedDate)} />,
+              organization: courseOrganization,
+              idSuffix: shortId ? ` · ID #${badgeInitials}-${shortId}` : '',
+            }}
+          />
+        </p>
+        <p className="sr-only">
+          {intl.formatMessage(get(
+            messages,
+            `profile.certificates.types.${certificateType}`,
+            messages['profile.certificates.types.unknown'],
+          ))}
+        </p>
+        <div className="pp-cert-actions">
+          <Hyperlink
+            destination={downloadUrl}
+            target="_blank"
+            showLaunchIcon={false}
+            className="btn btn-outline-primary btn-sm pp-cert-actions__view"
           >
             <FormattedMessage
-              id="profile.certificate.uuid"
-              defaultMessage="Credential ID {certificate_uuid}"
-              values={{
-                certificate_uuid: uuid,
-              }}
+              id="profile.certificate.view"
+              defaultMessage="View"
+              description="Button to view a certificate"
             />
-          </p>
+          </Hyperlink>
+          <Hyperlink
+            destination={downloadUrl}
+            target="_blank"
+            showLaunchIcon={false}
+            className="pp-cert-actions__download"
+          >
+            {intl.formatMessage(messages['profile.certificates.download.pdf'])}
+          </Hyperlink>
         </div>
       </div>
     </div>

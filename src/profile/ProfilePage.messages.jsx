@@ -6,6 +6,21 @@ const messages = defineMessages({
     defaultMessage: 'View My Records',
     description: 'A link to go view my academic records',
   },
+  'profile.editProfile': {
+    id: 'profile.editProfile',
+    defaultMessage: 'Edit profile',
+    description: 'Button that jumps down to the editable profile information section',
+  },
+  'profile.settings': {
+    id: 'profile.settings',
+    defaultMessage: 'Settings',
+    description: 'Link to the account settings app',
+  },
+  'profile.stats.certificatesEarned': {
+    id: 'profile.stats.certificatesEarned',
+    defaultMessage: 'certificates earned',
+    description: 'Label under the certificate count stat on the profile header',
+  },
   'profile.loading': {
     id: 'profile.loading',
     defaultMessage: 'Profile loading...',

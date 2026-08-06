@@ -20,6 +20,7 @@ const ProfileAvatar = ({
   onDelete,
   savePhotoState,
   isEditable,
+  initials,
 }) => {
   const intl = useIntl();
   const fileInput = useRef(null);
@@ -114,7 +115,13 @@ const ProfileAvatar = ({
 
   const renderAvatar = () => (
     isDefault ? (
-      <DefaultAvatar className="text-muted" role="img" aria-hidden focusable="false" viewBox="0 0 24 24" />
+      initials ? (
+        <span className="profile-avatar-initials" aria-hidden>
+          {initials}
+        </span>
+      ) : (
+        <DefaultAvatar className="text-muted" role="img" aria-hidden focusable="false" viewBox="0 0 24 24" />
+      )
     ) : (
       <img
         data-hj-suppress
@@ -158,6 +165,7 @@ ProfileAvatar.propTypes = {
   onDelete: PropTypes.func.isRequired,
   savePhotoState: PropTypes.oneOf([null, 'pending', 'complete', 'error']),
   isEditable: PropTypes.bool,
+  initials: PropTypes.string,
 };
 
 ProfileAvatar.defaultProps = {
@@ -165,6 +173,7 @@ ProfileAvatar.defaultProps = {
   isDefault: true,
   savePhotoState: null,
   isEditable: false,
+  initials: null,
 };
 
 export default ProfileAvatar;
