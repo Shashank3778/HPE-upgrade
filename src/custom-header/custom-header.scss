@@ -1,35 +1,73 @@
 /*
- * Design tokens below are ported 1:1 from frontend-component-header's
- * src/index.scss so the learning app's sidebar + top bar match the
- * header package exactly:
- *   - Sidebar colors/spacing  → .site-sidebar / .site-sidebar__nav-item
- *   - Top bar colors/spacing  → .learning-header + .site-header-top
- *   - User chip               → .site-header-user-chip
+ * Striverra Learn — sidebar + top bar
+ *
+ * Every colour, size, radius and spacing value below is taken verbatim from the
+ * Phase 1.5 UX mockup (Striverra Design System tokens). Do not invent new
+ * values here: add a token, get it approved, then use the token.
+ *
+ * Mockup → this file
+ *   .side-nav            → .hpe-nav-sidebar
+ *   .side-nav .nav-brand → .ch-logo
+ *   .side-nav a          → .ch-nav-item
+ *   .side-nav .nav-footer→ .ch-sidebar-footer
+ *   .top-header          → .ch-topbar
+ *   .breadcrumb          → .ch-breadcrumb
+ *   .user-pill           → .ch-user-pill
+ *   .user-dropdown       → .ch-dropdown
  */
 
 /* ── Design tokens ─────────────────────────────────────── */
 :root {
-  --ch-sidebar-w: 200px;                       /* .site-sidebar width */
-  --ch-topbar-h: 56px;                         /* .learning-header .container-xl min-height */
-  --ch-sidebar-bg: #1A2A44;                    /* .site-sidebar background */
-  --ch-sidebar-text: rgba(255, 255, 255, 0.65);/* .site-sidebar__nav-item color */
-  --ch-sidebar-text-hover: rgba(255, 255, 255, 0.95);
-  --ch-sidebar-active-bg: #5b5bd6;             /* .site-sidebar__nav-item.active background */
-  --ch-sidebar-active-text: #ffffff;
-  --ch-sidebar-hover-bg: rgba(255, 255, 255, 0.07);
-  --ch-sidebar-border: rgba(255, 255, 255, 0.08);
-  --ch-topbar-bg: #ffffff;                     /* .site-header-top / .learning-header background */
-  --ch-topbar-border: rgba(0, 0, 0, 0.10);     /* .learning-header border-bottom */
-  --ch-topbar-text: #012232;                   /* .course-title color */
-  --ch-topbar-text-muted: #4D6470;             /* .course-title-lockup span.small color */
-  --ch-breadcrumb-home: rgba(0, 0, 0, 0.4);
-  --ch-breadcrumb-sep: rgba(0, 0, 0, 0.25);
-  --ch-breadcrumb-current: #1a1d2e;
-  --ch-chip-bg: #f4f5f7;                       /* .site-header-user-chip background */
-  --ch-chip-bg-hover: #eaebee;
-  --ch-chip-border: #e2e4e9;
-  --ch-accent: #5b5bd6;                        /* accent purple used for avatars/active state */
-  --ch-font: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, Arial, sans-serif;
+  /* Primary — CTAs, links, active states */
+  --ch-p10:  #EFF0FF;
+  --ch-p20:  #DFE1FF;
+  --ch-p60:  #9FA6FF;
+  --ch-p100: #5F6AFF;   /* brand primary */
+  --ch-p120: #4750E0;   /* pressed / visited */
+
+  /* Neutral — surfaces, text, dividers */
+  --ch-n0:   #FFFFFF;
+  --ch-app:  #F4F7F9;   /* app background behind cards */
+  --ch-n10:  #FAFBFB;
+  --ch-n20:  #F2F4F5;
+  --ch-n30:  #D9DEE0;   /* control borders */
+  --ch-n40:  #B3BDC1;
+  --ch-n50:  #98A5AC;
+  --ch-n70:  #4D6470;   /* muted body text */
+  --ch-n80:  #334C58;
+  --ch-n100: #012232;   /* ink */
+  --ch-rail: #1A2A44;   /* nav rail navy — deliberately NOT the ink token */
+
+  /* State */
+  --ch-e10:  #FFEBEB;
+  --ch-e100: #FF3333;
+  --ch-e700: #A32D2D;
+
+  /* Lines — flat surfaces are defined by 1px borders, not shadows */
+  --ch-line:    rgba(0, 0, 0, 0.10);
+  --ch-divider: #EDF1F3;
+  --ch-rail-line: rgba(255, 255, 255, 0.08);
+
+  --ch-font: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, sans-serif;
+  --ch-mono: "Cascadia Code", "Consolas", "Courier New", monospace;
+
+  /* Radius — card/modal 8, button/input/badge 4, nav item 6, pill 50rem */
+  --ch-radius:      4px;
+  --ch-radius-card: 8px;
+  --ch-radius-nav:  6px;
+  --ch-radius-pill: 50rem;
+
+  /* Elevation — only floating layers. Flat surfaces get no shadow. */
+  --ch-shadow-drop: 0 4px 14px rgba(0, 0, 0, 0.10);
+  --ch-focus-ring:  0 0 0 3px rgba(95, 106, 255, 0.12);
+
+  --ch-transition: all 0.3s ease-in-out;
+
+  /* Geometry */
+  --ch-sidebar-w: 240px;   /* mockup .app-shell grid-template-columns */
+  --ch-topbar-h:  56px;    /* mockup .top-header height / .nav-brand height */
+  --ch-logo-h:    22px;    /* one rendered height for the wordmark */
+  --ch-maxw:      1164px;  /* design-system inner max-width */
 }
 
 /* ── Full-page layout ───────────────────────────────────── */
@@ -37,13 +75,16 @@
   display: flex;
   min-height: 100vh;
   font-family: var(--ch-font);
+  background: var(--ch-app);
+  color: var(--ch-n100);
 }
 
 /* ── Sidebar ────────────────────────────────────────────── */
 .hpe-nav-sidebar {
   width: var(--ch-sidebar-w);
   flex-shrink: 0;
-  background: var(--ch-sidebar-bg);
+  background: var(--ch-rail);
+  color: var(--ch-n0);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -53,72 +94,97 @@
   z-index: 200;
   overflow-y: auto;
   scrollbar-width: none;
+
   &::-webkit-scrollbar { display: none; }
 }
 
-/* Logo — matches .site-sidebar__logo */
+/* Logo — exactly the top-bar height, so the two bottom hairlines meet
+   at the same y. Off-by-a-pixel here is very visible. */
 .ch-logo {
-  padding: 16px;
-  border-bottom: 1px solid var(--ch-sidebar-border);
+  height: var(--ch-topbar-h);
+  min-height: var(--ch-topbar-h);
+  box-sizing: border-box;
+  padding: 0 20px;
   display: flex;
   align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--ch-rail-line);
+  flex-shrink: 0;
 
-  a { text-decoration: none; display: block; }
+  a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
 }
 
+/* background-size style scaling means whatever logo a customer configures is
+   scaled into this box — the rendered height never depends on the file size. */
 .ch-logo-img {
-  max-height: 36px;
-  width: auto;
-  height: auto;
   display: block;
+  height: var(--ch-logo-h);
+  max-height: var(--ch-logo-h);
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  object-position: left center;
 }
 
-/* Flat nav list — matches .site-sidebar__nav */
+/* Nav list — mockup .side-nav ul { padding: 16px 12px } */
 .ch-nav {
   flex: 1;
-  padding: 12px 0;
+  min-height: 0;
   overflow-y: auto;
 }
 
-/* Nav item — matches .site-sidebar__nav-item exactly */
+.ch-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 12px;
+}
+
+.ch-nav-li { margin-bottom: 2px; }
+
+/* Nav item — mockup .side-nav a */
 .ch-nav-item {
   display: flex !important;
   align-items: center;
   gap: 12px;
-  width: 100%;
-  padding: 11px 20px;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: var(--ch-sidebar-text) !important;
-  text-decoration: none !important;
+  padding: 9px 12px;
+  color: rgba(255, 255, 255, 0.75) !important;
   background: transparent !important;
   border: none !important;
-  border-radius: 0 !important;
-  cursor: pointer;
-  white-space: nowrap;
+  border-radius: var(--ch-radius-card) !important;
+  font-family: var(--ch-font);
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.5;
+  letter-spacing: 0;
+  text-decoration: none !important;
   box-shadow: none !important;
-  letter-spacing: 0.01em;
-  transition: none;
-  position: relative;
+  white-space: nowrap;
+  transition: var(--ch-transition);
 
   &:hover {
-    background: var(--ch-sidebar-hover-bg) !important;
-    color: var(--ch-sidebar-text-hover) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--ch-n0) !important;
     text-decoration: none !important;
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45) !important;
+  }
+
+  /* filled pill for the active state — no side rail, no left border */
   &.active {
-    background: var(--ch-sidebar-active-bg) !important;
-    color: var(--ch-sidebar-active-text) !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    margin: 0 10px !important;
-    width: calc(100% - 20px) !important;
-    padding: 11px 12px !important;
+    background: var(--ch-p100) !important;
+    color: var(--ch-n0) !important;
+    font-weight: 500 !important;
 
     .ch-nav-icon { opacity: 1; }
 
-    /* header design uses a filled pill for the active state, no side rail */
     &::before { content: none !important; }
   }
 }
@@ -126,43 +192,97 @@
 .ch-nav-icon {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  opacity: 0.8;
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
 
-  svg { width: 18px; height: 18px; }
+  svg { width: 16px; height: 16px; }
 }
 
 .ch-nav-label {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ── Main area ──────────────────────────────────────────── */
+/* Rail footer — mockup .side-nav .nav-footer */
+.ch-sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--ch-rail-line);
+  text-decoration: none !important;
+  flex-shrink: 0;
+  transition: var(--ch-transition);
+
+  &:hover { background: rgba(255, 255, 255, 0.05); }
+}
+
+.ch-sidebar-avatar {
+  border-radius: 50%;
+  background: var(--ch-p100);
+  color: var(--ch-n0);
+  display: grid;
+  place-items: center;
+  font-family: var(--ch-font);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ch-sidebar-user {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.ch-sidebar-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ch-n0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ch-sidebar-user-role {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Main column ────────────────────────────────────────── */
 .ch-main {
   flex: 1;
+  min-width: 0;
   margin-left: var(--ch-sidebar-w);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* ── Top bar ──────────────────────────────────────────────
-   Matches .learning-header + .site-header-top: white surface,
-   flat 1px bottom border (no shadow), Segoe UI. */
+/* ── Top bar — mockup .top-header ───────────────────────── */
 .ch-topbar {
   height: var(--ch-topbar-h);
-  background: var(--ch-topbar-bg);
-  border-bottom: 1px solid var(--ch-topbar-border);
+  min-height: var(--ch-topbar-h);
+  box-sizing: border-box;
+  background: var(--ch-n0);
+  border-bottom: 1px solid var(--ch-line);
   box-shadow: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
   padding: 0 24px;
   position: sticky;
   top: 0;
-  z-index: 100;
-  gap: 1rem;
+  z-index: 30;
 }
 
 .ch-topbar-left {
@@ -170,156 +290,179 @@
   min-width: 0;
 }
 
-/* Breadcrumb — matches .site-header-breadcrumb */
-.ch-topbar-breadcrumb {
-  font-size: 13px;
-  color: var(--ch-breadcrumb-current);
-  font-weight: 400;
+/* Breadcrumb — 12px / 600, letter-spacing .04em */
+.ch-breadcrumb {
   display: flex;
   align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ch-n70);
 
   a {
-    color: var(--ch-breadcrumb-home);
+    color: var(--ch-n70);
     text-decoration: none;
-    &:hover { color: var(--ch-breadcrumb-current); }
-  }
+    white-space: nowrap;
 
-  strong {
-    color: var(--ch-breadcrumb-current);
-    font-weight: 600;
-    font-size: 14px;
+    &:hover { color: var(--ch-p100); text-decoration: none; }
   }
 }
 
-.ch-topbar-sep {
-  color: var(--ch-breadcrumb-sep);
-  margin: 0 4px;
-}
+.ch-breadcrumb-sep { color: var(--ch-n40); }
 
-/* Course title lockup — matches .course-title-lockup .course-title */
-.ch-topbar-course {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ch-topbar-text);
-  white-space: nowrap;
+.ch-breadcrumb-current {
+  color: var(--ch-n100);
+  font-weight: 500;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: block;
+  white-space: nowrap;
 }
 
 .ch-topbar-right {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
-/* Search */
+/* Search — 280px, 4px radius, inner fill, icon inset 10px */
 .ch-search {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: var(--ch-chip-bg);
-  border: 1px solid var(--ch-chip-border);
-  border-radius: 20px;
-  padding: 0.35rem 0.75rem;
-  color: rgba(0, 0, 0, 0.4);
-  transition: border-color 0.15s, background 0.15s;
-  width: 220px;
-
-  &.open,
-  &:focus-within {
-    border-color: var(--ch-accent);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(91, 91, 214, 0.12);
-    color: var(--ch-breadcrumb-current);
-  }
 
   input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 0.82rem;
-    color: var(--ch-breadcrumb-current);
+    width: 280px;
+    background: var(--ch-n10);
+    border: 1px solid transparent;
+    border-radius: var(--ch-radius);
+    padding: 7px 12px 7px 32px;
     font-family: var(--ch-font);
-    width: 100%;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ch-n100);
 
-    &::placeholder { color: rgba(0, 0, 0, 0.35); }
+    &::placeholder { color: var(--ch-n50); }
+
+    &:focus {
+      outline: none;
+      background: var(--ch-n0);
+      border-color: var(--ch-p100);
+      box-shadow: var(--ch-focus-ring);
+    }
   }
-
-  svg { flex-shrink: 0; }
 }
 
-/* Icon button (bell) */
-.ch-icon-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: var(--ch-chip-bg);
-  color: rgba(0, 0, 0, 0.45);
+.ch-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-
-  &:hover {
-    background: var(--ch-chip-bg-hover);
-    color: var(--ch-breadcrumb-current);
-  }
+  pointer-events: none;
+  color: var(--ch-n50);
 }
 
-/* User button — matches .site-header-user-chip */
+/* Icon button (bell) — 36×36, 4px radius, transparent until hover */
+.ch-icon-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--ch-radius);
+  display: grid;
+  place-items: center;
+  color: var(--ch-n70);
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: var(--ch-transition);
+
+  &:hover { background: var(--ch-n10); color: var(--ch-n100); }
+
+  &:focus-visible { outline: none; box-shadow: var(--ch-focus-ring); }
+}
+
+.ch-icon-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  background: var(--ch-e100);
+  border: 1.5px solid var(--ch-n0);
+  border-radius: 50%;
+}
+
+/* ── User pill ──────────────────────────────────────────── */
 .ch-user-menu { position: relative; }
 
-.ch-user-btn {
+.ch-user-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--ch-chip-bg);
-  border: 1px solid var(--ch-chip-border);
-  border-radius: 20px;
+  padding: 4px 4px 4px 12px;
+  background: var(--ch-n10);
+  border: 0;
+  border-radius: var(--ch-radius-pill);
+  font-family: var(--ch-font);
+  font-size: 12px;
+  color: var(--ch-n80);
   cursor: pointer;
-  padding: 4px 12px 4px 4px;
-  transition: background 0.15s;
+  transition: background 0.15s ease;
 
-  &:hover { background: var(--ch-chip-bg-hover); }
+  &:hover { background: var(--ch-n20); }
+
+  &:focus-visible { outline: none; box-shadow: var(--ch-focus-ring); }
 }
 
 .ch-user-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--ch-breadcrumb-current);
-  font-family: var(--ch-font);
+  color: var(--ch-n80);
+  white-space: nowrap;
 }
 
-/* Avatar */
 .ch-avatar {
   border-radius: 50%;
-  background: var(--ch-accent);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  background: var(--ch-p20);
+  color: var(--ch-p120);
+  display: grid;
+  place-items: center;
   font-family: var(--ch-font);
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
-/* Dropdown */
+.ch-avatar-lg { font-size: 14px; }
+
+.ch-user-chevron {
+  color: var(--ch-n70);
+  flex-shrink: 0;
+  transition: var(--ch-transition);
+}
+
+.ch-user-menu.open .ch-user-chevron { transform: rotate(180deg); }
+
+/* ── Dropdown — 268px, 1px #D9DEE0, 4px radius, drop shadow ── */
 .ch-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  min-width: 260px;
-  z-index: 500;
-  overflow: hidden;
+  width: 268px;
+  background: var(--ch-n0);
+  border: 1px solid var(--ch-n30);
+  border-radius: var(--ch-radius);
+  box-shadow: var(--ch-shadow-drop);
+  padding: 8px;
+  z-index: 40;
   animation: ch-dropdown-in 0.12s ease;
 }
 
@@ -331,135 +474,345 @@
 .ch-dropdown-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--ch-divider);
 }
+
+.ch-dropdown-identity { min-width: 0; }
 
 .ch-dropdown-name {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.ch-dropdown-username {
-  font-size: 0.78rem;
-  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ch-n100);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ch-dropdown-divider {
-  height: 1px;
-  background: #f3f4f6;
-  margin: 0;
+.ch-dropdown-email {
+  font-size: 11px;
+  color: var(--ch-n70);
+  font-family: var(--ch-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ch-dropdown-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0.6rem 1rem;
-  font-size: 0.84rem;
-  font-weight: 500;
-  color: #374151;
-  text-decoration: none;
-  transition: background 0.1s;
+  gap: 12px;
+  padding: 8px 12px;
   font-family: var(--ch-font);
+  font-size: 13px;
+  color: var(--ch-n80);
+  border-radius: var(--ch-radius-nav);
+  text-decoration: none !important;
+  transition: var(--ch-transition);
+
+  svg { color: var(--ch-n70); flex-shrink: 0; }
 
   &:hover {
-    background: #f9fafb;
-    color: #111827;
+    background: var(--ch-p10);
+    color: var(--ch-p120);
     text-decoration: none;
+
+    svg { color: var(--ch-p100); }
   }
 
-  &.ch-dropdown-logout {
-    color: #dc2626;
-    &:hover { background: #fef2f2; }
+  &.ch-dropdown-signout {
+    color: var(--ch-e700);
+
+    svg { color: var(--ch-e700); }
+
+    &:hover {
+      background: var(--ch-e10);
+      color: var(--ch-e700);
+
+      svg { color: var(--ch-e700); }
+    }
   }
 }
 
-.ch-dropdown-item-icon {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  color: rgba(0, 0, 0, 0.5);
-}
+.ch-dropdown-item-label { flex: 1; min-width: 0; }
 
-.ch-dropdown-logout .ch-dropdown-item-icon { color: #dc2626; }
-
-.ch-dropdown-item-label { flex: 1; }
-
-.ch-dropdown-item-badge {
-  background: #eef0ff;
-  color: var(--ch-accent);
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 999px;
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 6px;
+.ch-dropdown-count {
+  margin-left: auto;
+  background: var(--ch-p10);
+  color: var(--ch-p120);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--ch-radius-pill);
   flex-shrink: 0;
 }
 
-.ch-dropdown-section-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.ch-dropdown-sep {
+  height: 1px;
+  background: var(--ch-divider);
+  margin: 8px 12px;
+}
+
+.ch-dropdown-role {
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.4);
-  padding: 10px 16px 4px;
+  letter-spacing: 0.06em;
+  color: var(--ch-n70);
+  padding: 8px 12px 2px;
 }
 
 .ch-dropdown-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 10px 16px;
-  background: var(--ch-sidebar-bg);
+  gap: 12px;
+  padding: 12px 12px 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--ch-divider);
+  background: transparent;
 }
 
 .ch-dropdown-footer-logo {
-  max-height: 20px;
+  height: 16px;
   width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  object-position: left center;
+  opacity: 0.85;
   display: block;
 }
 
 .ch-dropdown-footer-version {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+  color: var(--ch-n70);
+  font-family: var(--ch-mono);
 }
 
-/* ── Content area offset ────────────────────────────────── */
-/* All page content should be inside ch-main automatically
-   because we replaced the header which wraps the layout */
-.ch-content { display: none; } /* placeholder div, not used */
-
-/* Make sure the rest of the app body sits correctly */
-body {
-  margin: 0;
-  padding: 0;
-}
-
-/* ── Page content wrapper ───────────────────────────────── */
+/* ── Page content ───────────────────────────────────────── */
 .ch-page-content {
-  flex: 1;
+  flex: 1 0 auto;
   min-height: calc(100vh - var(--ch-topbar-h));
-  background: #f5f6f8;
+  background: var(--ch-app);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Ensure footer sits at bottom */
-.ch-main footer {
-  margin-top: auto;
+/* The content wrapper takes the slack, so on short pages the footer still
+   lands on the bottom edge instead of floating mid-page. */
+.ch-main > .ch-app-footer { margin-top: auto; }
+
+/* ── Theme switch — layout wrapper only; the control itself is the
+      standard .ch-toggle switch, unchanged from the design system. ── */
+.ch-theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ch-n70);
+  flex-shrink: 0;
 }
 
-/* ── Fix courseware full-width layout ───────────────────── */
+/* Toggle — Primary 100 when on, Neutral 30 when off */
+.ch-toggle {
+  width: 38px;
+  height: 20px;
+  border-radius: var(--ch-radius-pill);
+  background: var(--ch-n30);
+  border: 0;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--ch-transition);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ch-n0);
+    transition: var(--ch-transition);
+  }
+
+  &.on { background: var(--ch-p100); }
+
+  &.on::after { left: 20px; }
+
+  &:focus-visible { outline: none; box-shadow: var(--ch-focus-ring); }
+}
+
+/* ── App footer — mockup .app-footer ────────────────────── */
+.ch-app-footer {
+  background: var(--ch-n0);
+  border-top: 1px solid var(--ch-line);
+  margin-top: 40px;
+  padding: 24px;
+  font-family: var(--ch-font);
+  flex: 0 0 auto;
+}
+
+.ch-foot-inner {
+  max-width: var(--ch-maxw);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px 32px;
+  flex-wrap: wrap;
+}
+
+.ch-foot-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* object-fit: contain means whatever asset a customer configures is scaled
+   into this box, so the rendered height never depends on the file's pixel
+   size. Change --ch-logo-h in one place and the rail and footer both follow. */
+.ch-foot-logo {
+  display: block;
+  height: var(--ch-logo-h);
+  max-height: var(--ch-logo-h);
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.ch-foot-copy {
+  color: var(--ch-n70);
+  font-size: 12.5px;
+  margin: 0;
+}
+
+.ch-foot-links {
+  display: flex;
+  gap: 28px;
+  font-size: 13px;
+  flex-wrap: wrap;
+
+  a {
+    color: var(--ch-n70);
+    text-decoration: none;
+
+    &:hover { color: var(--ch-n100); text-decoration: none; }
+  }
+}
+
+/* ==================================================================
+   DARK MODE. A token swap, not a redesign — values from the design
+   system's dark-mode section. Control: the .ch-toggle switch in the top
+   bar, immediately left of the notifications bell.
+   ================================================================== */
+[data-theme="dark"] {
+  --ch-n0:   #16181A;   /* surface */
+  --ch-app:  #0D0D0E;   /* app background */
+  --ch-n10:  #1B1E20;
+  --ch-n20:  #212528;
+  --ch-n30:  #33393D;
+  --ch-n40:  #465055;
+  --ch-n50:  #5C676D;
+  --ch-n70:  #A8B3B9;   /* muted body text */
+  --ch-n80:  #C2CBD1;
+  --ch-n100: #F8F8F8;   /* ink */
+  --ch-rail: #12161F;
+  --ch-line: rgba(255, 255, 255, 0.12);
+  --ch-divider: rgba(255, 255, 255, 0.10);
+  --ch-p10:  #1D2036;   /* selected / active tint */
+  --ch-p20:  #262A44;
+  --ch-e10:  #2E1416;
+  --ch-e700: #FF8A8A;
+}
+
+[data-theme="dark"] body { background: var(--ch-app); }
+
+/* Prototype shortcut: invert an ink wordmark so it stays legible on the dark
+   surfaces. Production should serve a real light asset via LOGO_WHITE_URL. */
+[data-theme="dark"] .ch-dropdown-footer-logo,
+[data-theme="dark"] .ch-foot-logo {
+  filter: invert(1) hue-rotate(180deg) brightness(1.1);
+}
+
+/* Paragon surfaces inside the content area. PARTIAL by design — this remaps
+   the tokens the learning MFE actually paints with; extend the list if a
+   component still comes through light. XBlock content lives in an iframe
+   rendered by the LMS, so it cannot be themed from here at all. */
+[data-theme="dark"] .ch-page-content {
+  --pgn-color-white: #16181A;
+  --pgn-color-black: #F8F8F8;
+  --pgn-color-light-100: #1B1E20;
+  --pgn-color-light-200: #212528;
+  --pgn-color-light-300: #212528;
+  --pgn-color-light-400: #33393D;
+  --pgn-color-light-500: #33393D;
+  --pgn-color-gray-100: #1B1E20;
+  --pgn-color-gray-200: #212528;
+  --pgn-color-gray-300: #33393D;
+  --pgn-color-gray-400: #465055;
+  --pgn-color-gray-500: #5C676D;
+  --pgn-color-gray-600: #93A1A8;
+  --pgn-color-gray-700: #C2CBD1;
+  --pgn-color-gray-800: #F8F8F8;
+  --pgn-color-gray-900: #F8F8F8;
+
+  background: var(--ch-app);
+  color: var(--ch-n100);
+}
+
+/* ── Responsive — the rail collapses to icons, then the chrome sheds
+      the optional bits, in the same order the mockup drops them. ── */
+@media (max-width: 1100px) {
+  .ch-search input { width: 200px; }
+}
+
+@media (max-width: 992px) {
+  :root { --ch-sidebar-w: 64px; }
+
+  .ch-logo { padding: 0; justify-content: center; }
+
+  .ch-logo-img { max-width: 40px; }
+
+  .ch-nav-list { padding: 12px 8px; }
+
+  .ch-nav-item {
+    justify-content: center;
+    padding: 11px 0;
+    gap: 0;
+  }
+
+  .ch-nav-label { display: none; }
+
+  .ch-sidebar-footer { justify-content: center; padding: 16px 8px; }
+
+  .ch-sidebar-user { display: none; }
+}
+
+@media (max-width: 768px) {
+  .ch-topbar { padding: 0 12px; gap: 8px; }
+
+  .ch-search { display: none; }
+
+  .ch-user-name { display: none; }
+
+  .ch-user-pill { padding: 4px; }
+
+  .ch-theme-switch svg { display: none; }
+
+  .ch-app-footer { padding: 20px 16px; }
+
+  .ch-foot-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  .ch-foot-links { gap: 20px; }
+}
+
+/* ── Courseware full-width fixes (unchanged behaviour) ──── */
 #main-content {
   width: 100% !important;
   max-width: 100% !important;
