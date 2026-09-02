@@ -177,15 +177,25 @@
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45) !important;
   }
 
-  /* filled pill for the active state — no side rail, no left border */
+  /* Filled pill for the active state — mockup `.side-nav a.active`:
+     solid Primary 100, white text, same 8px radius as the resting item.
+     No side rail, no left border, no weight change. */
   &.active {
     background: var(--ch-p100) !important;
     color: var(--ch-n0) !important;
-    font-weight: 500 !important;
 
     .ch-nav-icon { opacity: 1; }
 
     &::before { content: none !important; }
+  }
+
+  /* Hover must not wash the pill out. The base :hover rule has the same
+     specificity, so this is stated explicitly rather than relying on
+     source order surviving a future edit. */
+  &.active:hover,
+  &.active:focus {
+    background: var(--ch-p100) !important;
+    color: var(--ch-n0) !important;
   }
 }
 
@@ -732,6 +742,14 @@
 }
 
 [data-theme="dark"] body { background: var(--ch-app); }
+
+/* The active pill stays Primary 100 in dark mode — the rail darkens around
+   it, so the selected item gains contrast rather than losing it. */
+[data-theme="dark"] .ch-nav-item.active,
+[data-theme="dark"] .ch-nav-item.active:hover {
+  background: #5F6AFF !important;
+  color: #FFFFFF !important;
+}
 
 /* Prototype shortcut: invert an ink wordmark so it stays legible on the dark
    surfaces. Production should serve a real light asset via LOGO_WHITE_URL. */

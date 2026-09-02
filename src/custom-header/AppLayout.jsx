@@ -222,7 +222,7 @@ NavItem.propTypes = {
 NavItem.defaultProps = { active: false };
 
 /* ── AppLayout wraps everything ─────────────────────────── */
-const AppLayout = ({ courseTitle, children }) => {
+const AppLayout = ({ courseTitle, activeNav, children }) => {
   const user = getAuthenticatedUser();
   const config = getConfig() || {};
 
@@ -276,11 +276,49 @@ const AppLayout = ({ courseTitle, children }) => {
   const isStaff = !!user?.administrator
     || (user?.roles || []).some((role) => role.includes('staff') || role.includes('instructor'));
 
-  // Active state compares against the real browser URL rather than the router
-  // path, since these are cross-app links. Inside a course none of them match,
-  // which is correct — the course tabs own the in-course active state.
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const isCurrent = (href) => !!href && href !== lmsBase && currentUrl.indexOf(href) === 0;
+  /* ---- Which rail item wears the blue pill -----------------------------
+     Two-step resolution, because these are cross-app links:
+
+     1. If the browser is genuinely sitting on one of the destinations
+        (same origin AND the path is a prefix of the current path), that
+        item is active. This is what makes the pill correct if the rail is
+        ever reused on the LMS dashboard / catalog / profile pages.
+     2. Otherwise we are inside the learning MFE — a course page, which is
+        reached *through* Dashboard / My courses. So the section that owns
+        the current page is the one named by `activeNav` (default
+        'dashboard'). Without this step nothing ever matched and no item
+        was ever highlighted.
+     -------------------------------------------------------------------- */
+  const isOnPage = (href) => {
+    if (!href || typeof window === 'undefined') { return false; }
+    let target;
+    try {
+      target = new URL(href, window.location.origin);
+    } catch (e) {
+      return false;
+    }
+    if (target.origin !== window.location.origin) { return false; }
+    const strip = (path) => (path.length > 1 ? path.replace(/\/+$/, '') : path);
+    const targetPath = strip(target.pathname);
+    if (targetPath === '/' || targetPath === '') { return false; }
+    const here = strip(window.location.pathname);
+    return here === targetPath || here.indexOf(`${targetPath}/`) === 0;
+  };
+
+  const navItems = [
+    {
+      key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, href: dashboardUrl,
+    },
+    {
+      key: 'catalog', label: 'Catalog', icon: <CatalogIcon />, href: catalogUrl,
+    },
+    {
+      key: 'profile', label: 'Profile', icon: <ProfileIcon />, href: profileUrl,
+    },
+  ];
+
+  const matchedItem = navItems.find((item) => isOnPage(item.href));
+  const activeKey = matchedItem ? matchedItem.key : activeNav;
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -311,24 +349,15 @@ const AppLayout = ({ courseTitle, children }) => {
 
         <nav className="ch-nav" aria-label="Main">
           <ul className="ch-nav-list">
-            <NavItem
-              icon={<DashboardIcon />}
-              label="Dashboard"
-              href={dashboardUrl}
-              active={isCurrent(dashboardUrl)}
-            />
-            <NavItem
-              icon={<CatalogIcon />}
-              label="Catalog"
-              href={catalogUrl}
-              active={isCurrent(catalogUrl)}
-            />
-            <NavItem
-              icon={<ProfileIcon />}
-              label="Profile"
-              href={profileUrl}
-              active={isCurrent(profileUrl)}
-            />
+            {navItems.map((item) => (
+              <NavItem
+                key={item.key}
+                icon={item.icon}
+                label={item.label}
+                href={item.href}
+                active={activeKey === item.key}
+              />
+            ))}
           </ul>
         </nav>
 
@@ -488,11 +517,15 @@ const AppLayout = ({ courseTitle, children }) => {
 
 AppLayout.propTypes = {
   courseTitle: PropTypes.string,
+  // Which rail item is highlighted when the browser is not literally on one of
+  // the rail destinations — i.e. on every course page in this MFE.
+  activeNav: PropTypes.oneOf(['dashboard', 'catalog', 'profile', 'none']),
   children: PropTypes.node.isRequired,
 };
 
 AppLayout.defaultProps = {
   courseTitle: null,
+  activeNav: 'dashboard',
 };
 
 export default AppLayout;

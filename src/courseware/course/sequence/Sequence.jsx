@@ -14,8 +14,6 @@ import PageLoading from '@src/generic/PageLoading';
 import { useModel } from '@src/generic/model-store';
 import { useSequenceBannerTextAlert, useSequenceEntranceExamAlert } from '@src/alerts/sequence-alerts/hooks';
 import SequenceContainerSlot from '@src/plugin-slots/SequenceContainerSlot';
-import { CourseOutlineSidebarSlot } from '@src/plugin-slots/CourseOutlineSidebarSlot';
-import { CourseOutlineSidebarTriggerSlot } from '@src/plugin-slots/CourseOutlineSidebarTriggerSlot';
 import { RightSidebarSlot } from '@src/plugin-slots/RightSidebarSlot';
 import SequenceNavigationSlot from '@src/plugin-slots/SequenceNavigationSlot';
 
@@ -43,7 +41,6 @@ const Sequence = ({
     originalUserIsStaff,
   } = useModel('courseHomeMeta', courseId);
   const sequence = useModel('sequences', sequenceId);
-  const section = useModel('sections', sequence ? sequence.sectionId : null);
   const unit = useModel('units', unitId);
   const sequenceStatus = useSelector(state => state.courseware.sequenceStatus);
   const sequenceMightBeUnit = useSelector(state => state.courseware.sequenceMightBeUnit);
@@ -186,13 +183,6 @@ const Sequence = ({
   const defaultContent = (
     <>
       <div className="sequence-container d-inline-flex flex-row w-100">
-        <CourseOutlineSidebarTriggerSlot
-          sectionId={section ? section.id : null}
-          sequenceId={sequenceId}
-          isStaff={isStaff}
-          unitId={unitId}
-        />
-        <CourseOutlineSidebarSlot />
         <div className="sequence w-100">
           <div className="sequence-navigation-container">
             {/**
